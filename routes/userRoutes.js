@@ -1,7 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
-const session = require('express-session');
 const nodemailer = require("nodemailer");
 
 const router = express.Router();
@@ -16,7 +15,7 @@ router.get('/registration', (req, res) => {
 
 router.post('/registration', async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, email, password, repeatPassword } = req.body;
 
         const existingUsername = await User.findOne({ username });
         if (existingUsername) {
@@ -28,14 +27,15 @@ router.post('/registration', async (req, res) => {
             return res.render('registration', { message: 'User with this email is already exists' });
         }
 
-        if(password !== repeatPassword){
+        if (password !== repeatPassword) {
             return res.render('registration', { message: 'Passwords are not same' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ username, email, password: hashedPassword});
-
+        const newUser = new User({ username, email, password: hashedPassword });
+        await newUser.addDefaultCategories();
         await newUser.save();
+
         res.redirect('/login');
     } catch (err) {
         res.status(500).send('Error creating user');
