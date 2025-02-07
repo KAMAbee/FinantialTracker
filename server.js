@@ -1,25 +1,19 @@
-// Import modules
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
-require('dotenv').config();
+const cookieParser = require('cookie-parser');
 const session = require('express-session');
+require('dotenv').config();
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
+app.use(cookieParser());
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
-
-app.use(session({
-    secret: process.env.SECRET_KEY,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }
-}));
 
 // Connection to MongoDB
 mongoose.connect(process.env.URI, {
@@ -31,12 +25,19 @@ mongoose.connect(process.env.URI, {
     console.error('Error connecting to MongoDB:', err);
 });
 
+app.use(session({
+    secret: process.env.SECRET_KEY,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}));
+
+// Routes
 const userRoutes = require('./routes/userRoutes');
-app.use(userRoutes);
+app.use('/', userRoutes);
 
-app.use((req, res) => {
-    res.redirect('/profile');
+// Server creation
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
 });
-
-const PORT = process.env.PORT || 3000
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}/`));

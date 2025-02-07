@@ -1,15 +1,43 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const session = require('express-session');
 const nodemailer = require("nodemailer");
 
 const router = express.Router();
 
-// Registration
-router.get('/registration', (req, res) => {
-    if (req.session.user) {
-        return res.redirect('/profile');
+// Authenticate Middleware
+const authenticateJWT = (req, res, next) => {
+    const token = req.cookies.token;
+    if (!token) {
+        return res.redirect('/login');
     }
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (err) {
+        res.clearCookie('token');
+        res.redirect('/login');
+    }
+};
+
+// Check if user is Authenticated 
+const redirectIfAuthenticated = (req, res, next) => {
+    if (req.cookies.token) {
+        try {
+            jwt.verify(req.cookies.token, process.env.JWT_SECRET);
+            return res.redirect('/profile');
+        } catch (err) {
+            res.clearCookie('token');
+        }
+    }
+    next();
+};
+
+// Registration
+router.get('/registration', redirectIfAuthenticated, (req, res) => {
     res.render('registration', { message: null });
 });
 
@@ -27,7 +55,7 @@ router.post('/registration', async (req, res) => {
             return res.render('registration', { message: 'User with this email is already exists' });
         }
 
-        if (password !== repeatPassword) {
+        if(password !== repeatPassword){
             return res.render('registration', { message: 'Passwords are not same' });
         }
 
@@ -42,12 +70,8 @@ router.post('/registration', async (req, res) => {
     }
 });
 
-
 // Login
-router.get('/login', (req, res) => {
-    if (req.session.user) {
-        return res.redirect('/profile');
-    }
+router.get('/login', redirectIfAuthenticated, (req, res) => {
     res.render('login', { message: null });
 });
 
@@ -56,6 +80,7 @@ router.post('/login', async (req, res) => {
         const { username, password } = req.body;
 
         const user = await User.findOne({ username });
+
         if (!user) {
             return res.render('login', { message: 'User not found' });
         }
@@ -65,86 +90,68 @@ router.post('/login', async (req, res) => {
             return res.render('login', { message: 'Incorrect password' });
         }
 
-        req.session.user = user;
+        const token = jwt.sign({ id: user._id, username: user.username, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        res.cookie('token', token, { httpOnly: true });
         res.redirect('/profile');
     } catch (err) {
-        res.status(500).send('Error logging in');
+        res.status(500).send('Login error');
     }
 });
 
-// Profile page
-router.get('/profile', isAuthenticated, (req, res) => {
-    res.render('profile', { user: req.session.user, message: null });
+// Profile
+router.get('/profile', authenticateJWT, (req, res) => {
+    res.render('profile', { user: req.user, message: null });
 });
 
-// Update profile
-router.post('/update_user', isAuthenticated, async (req, res) => {
+// Profile update
+router.post('/update_user', authenticateJWT, async (req, res) => {
     try {
         const { username, email, password } = req.body;
-        const userId = req.session.user._id;
+        const userId = req.user.id;
 
         const existingUsername = await User.findOne({ username, _id: { $ne: userId } });
         if (existingUsername) {
-            return res.render('profile', { user: req.session.user, message: 'User with this username is already exists' });
+            return res.render('profile', { user: req.user, message: 'User with this username already exists' });
         }
 
         const existingEmail = await User.findOne({ email, _id: { $ne: userId } });
         if (existingEmail) {
-            return res.render('profile', { user: req.session.user, message: 'User with this email is already exists' });
+            return res.render('profile', { user: req.user, message: 'User with this email already exists' });
         }
 
         const updateData = { username, email };
-        if (password) {
+
+        if (password && password.trim() !== "") {
             updateData.password = await bcrypt.hash(password, 10);
         }
 
-        const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
-
-        req.session.user = updatedUser;
+        await User.findByIdAndUpdate(userId, updateData, { new: true });
 
         res.redirect('/profile');
     } catch (err) {
-        res.status(500).send('Error updating profile')
+        console.error(err);
+        res.status(500).send('Update error');
     }
 });
 
-// Delete profile
-router.post('/delete_user', isAuthenticated, async (req, res) => {
+// Profile delete
+router.post('/delete_user', authenticateJWT, async (req, res) => {
     try {
-        const userId = req.session.user._id;
-
-        await User.findByIdAndDelete(userId);
-
-        req.session.destroy(err => {
-            if (err) {
-                return res.status(500).send('Error deleting profile');
-            }
-            res.redirect('/login');
-        });
+        await User.findByIdAndDelete(req.user.id);
+        res.clearCookie('token');
+        res.redirect('/login');
     } catch (err) {
-        res.status(500).send('Error deleting profile');
+        res.status(500).send('Delete error');
     }
 });
-
-// Authentification
-function isAuthenticated(req, res, next) {
-    if (req.session.user) {
-        return next();
-    }
-    res.redirect('/login');
-}
 
 
 // Log out
 router.get('/logout', (req, res) => {
-    req.session.destroy(err => {
-        if (err) {
-            return res.status(500).send('Error logging out');
-        }
-        res.redirect('/login');
-    });
+    res.clearCookie('token');
+    res.redirect('/login');
 });
-
 
 // Email sender
 const transporter = nodemailer.createTransport({
@@ -157,11 +164,7 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-// Send Verification code
 router.get('/reset', (req, res) => {
-    if (req.session.user) {
-        return res.redirect('/profile');
-    }
     res.render('reset', { message: null, messageType: null });
 });
 
@@ -193,10 +196,10 @@ router.post('/reset', async (req, res) => {
             return res.render('reset', { message: 'Error sending email', messageType: 'error' });
         }
     } catch (err) {
+        console.log(err)
         res.status(500).send('Error')
     }
 });
-
 
 router.post('/resetcode', async (req, res) => {
     try {
@@ -245,6 +248,7 @@ router.post('/newpassword', async (req, res) => {
     }
 });
 
+
 // All users in json 
 router.get('/users', async (req, res) => {
     try {
@@ -253,6 +257,10 @@ router.get('/users', async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: 'Error retrieving users' });
     }
+});
+
+router.use((req, res) => {
+    res.redirect('/profile');
 });
 
 module.exports = router;

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header class="header">
+        <h1 class="header__title">Registration</h1>
+      </header>
+    
+      <main class="main">
+        <form action="/transactions" method="POST" class="main__form">
+          <div class="main__form-wrap">
+            <label for="name" class="main__form-label">name</label>
+            <input type="text" id="name" class="main__form-input" name="name" placeholder="name" required>
+          </div>
+          <div class="main__form-wrap">
+            <label for="amount" class="main__form-label">Amount</label>
+            <input type="text" id="amount" class="main__form-input" name="amount" placeholder="Amount" required>
+          </div>
+    
+          <div class="main__form-wrap">
+            <label for="category" class="main__form-label">category</label>
+            <input type="text" id="category" class="main__form-input" name="category" placeholder="category" required>
+          </div>
+    
+    
+          <div class="main__form-wrap">
+            <label for="type" class="main__form-label">type</label>
+            <input type="text" id="type" class="main__form-input" name="type" placeholder="type" required>
+          </div>
+    
+          <% if (message) { %>
+          <div class="main__form-error">
+            <%= message %>
+          </div>
+          <% } %>
+    
+          <button type="submit" class="main__form-submit">Register</button>
+        </form>
+      </main>
+    
+</body>
+</html>
