@@ -4,24 +4,9 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const session = require('express-session');
 const nodemailer = require("nodemailer");
-
 const router = express.Router();
+const { authenticateJWT } = require('../middleware/authMiddleware');
 
-// Authenticate Middleware
-const authenticateJWT = (req, res, next) => {
-    const token = req.cookies.token;
-    if (!token) {
-        return res.redirect('/login');
-    }
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
-        next();
-    } catch (err) {
-        res.clearCookie('token');
-        res.redirect('/login');
-    }
-};
 
 // Check if user is Authenticated 
 const redirectIfAuthenticated = (req, res, next) => {
@@ -259,8 +244,5 @@ router.get('/users', async (req, res) => {
     }
 });
 
-router.use((req, res) => {
-    res.redirect('/profile');
-});
 
 module.exports = router;

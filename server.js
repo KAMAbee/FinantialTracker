@@ -34,7 +34,15 @@ app.use(session({
 
 // Routes
 const userRoutes = require('./routes/userRoutes');
+const transactionRoutes = require('./routes/transactionRoutes');
+const goalRoutes = require('./routes/goalRoutes');
 app.use('/', userRoutes);
+app.use('/transactions', transactionRoutes);
+app.use('/goals', goalRoutes);
+
+app.use((req, res) => {
+    res.redirect('/profile');
+});
 
 // Server creation
 const PORT = process.env.PORT || 3000;

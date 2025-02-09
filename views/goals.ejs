@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <header class="header">
+    <h1 class="header__title">Goals</h1>
+  </header>
+
+  <main class="main">
+    <form action="/goals/addGoal" method="POST" class="main__form">
+        <label for="name">name:</label>
+        <input type="text" id="name" name="name" required>
+        
+        <label for="description">description:</label>
+        <textarea id="description" name="description" required></textarea>
+        
+        <label for="goalAmount">goalAmount:</label>
+        <input type="number" id="goalAmount" name="goalAmount" required>
+        
+        <label for="deadline">deadline:</label>
+        <input type="date" id="deadline" name="deadline" required>
+        
+        <button type="submit">save</button>
+
+    </form>
+  </main>
+
+</body>
+
+</html>
