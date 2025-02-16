@@ -33,10 +33,12 @@ app.use(session({
 }));
 
 // Routes
+const homeRoutes = require('./routes/homeRoutes');
 const userRoutes = require('./routes/userRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const goalRoutes = require('./routes/goalRoutes');
 app.use('/', userRoutes);
+app.use('/home', homeRoutes);
 app.use('/transactions', transactionRoutes);
 app.use('/goals', goalRoutes);
 

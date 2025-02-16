@@ -4,33 +4,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Goals</title>
+  <link rel="stylesheet" href="goals.css"> 
 </head>
 
 <body>
+  <nav class="navbar">
+    <ul class="navbar__list">
+      <li class="navbar__item">
+        <a href="/home" class="navbar__link">Home</a>
+      </li>
+      <li class="navbar__item">
+        <a href="/transactions" class="navbar__link">Transactions</a>
+      </li>
+      <li class="navbar__item">
+        <a href="/goals" class="navbar__link navbar__link--active">Goals</a>
+      </li>
+      <li class="navbar__item">
+        <a href="/profile" class="navbar__link">Profile</a>
+      </li>
+    </ul>
+  </nav>
+  
   <header class="header">
     <h1 class="header__title">Goals</h1>
   </header>
 
   <main class="main">
-    <form action="/goals/addGoal" method="POST" class="main__form">
-        <label for="name">name:</label>
-        <input type="text" id="name" name="name" required>
-        
-        <label for="description">description:</label>
-        <textarea id="description" name="description" required></textarea>
-        
-        <label for="goalAmount">goalAmount:</label>
-        <input type="number" id="goalAmount" name="goalAmount" required>
-        
-        <label for="deadline">deadline:</label>
-        <input type="date" id="deadline" name="deadline" required>
-        
-        <button type="submit">save</button>
+    <div class="main__container">
+      <!-- Goal Form -->
+      <form action="/goals/addGoal" method="POST" class="main__form">
+          <label for="name" class="main__form-label">Goal Name</label>
+          <input type="text" id="name" name="name" required class="main__form-input">
 
-    </form>
+          <label for="description" class="main__form-label">Description</label>
+          <textarea id="description" name="description" required class="main__form-input"></textarea>
+
+          <label for="goalAmount" class="main__form-label">Goal Amount</label>
+          <input type="number" id="goalAmount" name="goalAmount" required class="main__form-input">
+
+          <label for="deadline" class="main__form-label">Deadline</label>
+          <input type="date" id="deadline" name="deadline" required class="main__form-input">
+
+          <button type="submit" class="main__form-submit">Save Goal</button>
+      </form>
+
+      <!-- Display Goals -->
+      <h2>Your Goals</h2>
+      <div class="goals__list">
+        <% goals.forEach(function(goal) { %>
+          <div class="goal-item">
+            <h3><%= goal.name %></h3>
+            <p><%= goal.description %></p>
+            <p>Goal Amount: <%= goal.goalAmount %> | Current Saved: <%= goal.currentSaved %></p>
+            <p>Deadline: <%= goal.deadline %></p>
+
+            <!-- Add Money Form -->
+            <form action="/goals/addMoney" method="POST" class="goal-item__add-money-form">
+              <input type="hidden" name="goalId" value="<%= goal._id %>">
+              <label for="amount" class="goal-item__add-money-label">Add Money:</label>
+              <input type="number" name="amount" min="0" required class="goal-item__add-money-input">
+              <button type="submit" class="goal-item__add-money-button">Add Money</button>
+            </form>
+          </div>
+        <% }) %>
+      </div>
+    </div>
   </main>
-
 </body>
 
 </html>

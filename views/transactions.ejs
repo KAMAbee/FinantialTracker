@@ -4,34 +4,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Transactions</title>
+  <link rel="stylesheet" href="transactions.css"> 
 </head>
 
 <body>
+  <nav class="navbar">
+    <ul class="navbar__list">
+      <li class="navbar__item">
+        <a href="/home" class="navbar__link">Home</a>
+      </li>
+      <li class="navbar__item">
+        <a href="/transactions" class="navbar__link navbar__link--active">Transactions</a>
+      </li>
+      <li class="navbar__item">
+        <a href="/goals" class="navbar__link">Goals</a>
+      </li>
+      <li class="navbar__item">
+        <a href="/profile" class="navbar__link">Profile</a>
+      </li>
+    </ul>
+  </nav>
+
   <header class="header">
     <h1 class="header__title">Transactions</h1>
   </header>
 
   <main class="main">
+    <!-- Add Transaction Form -->
     <form action="/transactions/addTransactions" method="POST" class="main__form">
       <div class="main__form-wrap">
-        <label for="name" class="main__form-label">name</label>
-        <input type="text" id="name" class="main__form-input" name="name" placeholder="name" required>
+        <label for="name" class="main__form-label">Name</label>
+        <input type="text" id="name" class="main__form-input" name="name" placeholder="Name" required>
       </div>
       <div class="main__form-wrap">
         <label for="amount" class="main__form-label">Amount</label>
         <input type="text" id="amount" class="main__form-input" name="amount" placeholder="Amount" required>
       </div>
-
       <div class="main__form-wrap">
-        <label for="category" class="main__form-label">category</label>
-        <input type="text" id="category" class="main__form-input" name="category" placeholder="category" required>
+        <label for="category" class="main__form-label">Category</label>
+        <!-- Category dropdown -->
+        <select id="category" class="main__form-input" name="category" required>
+          <% categories.forEach(category => { %>
+            <option value="<%= category.name %>"><%= category.name %></option>
+          <% }) %>
+        </select>
       </div>
-
-
       <div class="main__form-wrap">
-        <label for="type" class="main__form-label">type</label>
-        <input type="text" id="type" class="main__form-input" name="type" placeholder="type" required>
+        <label for="type" class="main__form-label">Type</label>
+        <select id="type" class="main__form-input" name="type" required>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
       </div>
 
       <% if (message) { %>
@@ -40,8 +64,73 @@
       </div>
       <% } %>
 
-      <button type="submit" class="main__form-submit">add</button>
+      <button type="submit" class="main__form-submit">Add Transaction</button>
     </form>
+
+    <!-- Add Category Form -->
+    <form action="/transactions/addCategory" method="POST" class="main__form">
+      <div class="main__form-wrap">
+        <label for="newCategory" class="main__form-label">Add New Category</label>
+        <input type="text" id="newCategory" class="main__form-input" name="categoryName" placeholder="Category Name" required>
+      </div>
+
+      <% if (categoryMessage) { %>
+      <div class="main__form-error">
+        <%= categoryMessage %>
+      </div>
+      <% } %>
+
+      <button type="submit" class="main__form-submit">Add Category</button>
+    </form>
+
+    <section class="transactions">
+      <h2>All Transactions</h2>
+
+      <!-- Filter Form (Moved below here) -->
+      <form action="/transactions" method="GET" class="main__form">
+        <div class="main__form-wrap">
+          <label for="categoryFilter" class="main__form-label">Filter by Category</label>
+          <select id="categoryFilter" class="main__form-input" name="category">
+            <option value="">All Categories</option>
+            <% categories.forEach(category => { %>
+              <option value="<%= category.name %>" <%= category.name === selectedCategory ? 'selected' : '' %>><%= category.name %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="main__form-wrap">
+          <label for="typeFilter" class="main__form-label">Filter by Type</label>
+          <select id="typeFilter" class="main__form-input" name="type">
+            <option value="">All Types</option>
+            <option value="income" <%= selectedType === 'income' ? 'selected' : '' %>>Income</option>
+            <option value="expense" <%= selectedType === 'expense' ? 'selected' : '' %>>Expense</option>
+          </select>
+        </div>
+        <button type="submit" class="main__form-submit">Filter</button>
+      </form>
+
+      <table class="transactions__table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Type</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% transactions.forEach(transaction => { %>
+          <tr>
+            <td><%= transaction.name %></td>
+            <td><%= transaction.amount %></td>
+            <td><%= transaction.category %></td>
+            <td><%= transaction.type %></td>
+            <td><%= transaction.createdAt %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
   </main>
 
 </body>
