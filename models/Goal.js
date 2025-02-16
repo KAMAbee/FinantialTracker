@@ -8,7 +8,7 @@ const goalSchema = new mongoose.Schema({
     description: String,
     goalAmount: Number,
     currentSaved: {type: Number, default: 0},
-    deadline: { type: Date },
+    deadline: { type: Date, default: Date.now, get: (date) => moment(date).format('DD-MM-YYYY')},
     createdAt: { type: Date, default: Date.now, get: (date) => moment(date).format('DD-MM-YYYY') },
 });
 

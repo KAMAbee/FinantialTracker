@@ -61,6 +61,8 @@ html, body {
     margin-top: 25px;
   }
   
+  
+
   .main {
     margin-top: 25px; /* Add space to account for fixed navbar */
     display: flex;

@@ -52,7 +52,7 @@ router.post('/addMoney', authenticateJWT, async (req, res) => {
         goal.currentSaved += amount;
 
         if (goal.currentSaved > goal.goalAmount) {
-            goal.currentSaved = goal.goalAmount; // Cap the amount to the goal amount
+            goal.currentSaved = goal.goalAmount;
         }
 
         await goal.save();
