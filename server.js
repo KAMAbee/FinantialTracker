@@ -37,10 +37,12 @@ const homeRoutes = require('./routes/homeRoutes');
 const userRoutes = require('./routes/userRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const goalRoutes = require('./routes/goalRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 app.use('/', userRoutes);
 app.use('/home', homeRoutes);
 app.use('/transactions', transactionRoutes);
 app.use('/goals', goalRoutes);
+app.use('/admin', adminRoutes);
 
 app.use((req, res) => {
     res.redirect('/profile');

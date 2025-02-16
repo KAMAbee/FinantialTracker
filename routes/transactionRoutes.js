@@ -82,7 +82,6 @@ router.post('/addCategory', authenticateJWT, async (req, res) => {
             });
         }
 
-        // Create and add the new category
         const newCategory = { 
             userId: req.user.id,
             name: categoryName,
