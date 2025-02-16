@@ -45,7 +45,7 @@ app.use('/goals', goalRoutes);
 app.use('/admin', adminRoutes);
 
 app.use((req, res) => {
-    res.redirect('/profile');
+    res.redirect('/home');
 });
 
 // Server creation

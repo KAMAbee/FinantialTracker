@@ -7,6 +7,7 @@ const { authenticateJWT, verifyRole } = require('../middleware/authMiddleware');
 
 router.get('/', authenticateJWT, verifyRole, async (req, res) => {
     const users = await User.find({});
+    
     res.render('admin', {users, message: null });
 });
 

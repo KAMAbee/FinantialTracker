@@ -184,3 +184,13 @@ body {
 .transactions__table td:last-child {
   text-align: right;
 }
+
+.income{
+  color: #0d670c;
+  font-weight: bold;
+}
+
+.expense{
+  color: #9e2121;
+  font-weight: bold;
+}
