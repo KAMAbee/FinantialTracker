@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Goals</title>
-  <link rel="stylesheet" href="goals.css"> 
+  <link rel="stylesheet" href="goals.css">
 </head>
 
 <body>
@@ -25,7 +25,7 @@
       </li>
     </ul>
   </nav>
-  
+
   <header class="header">
     <h1 class="header__title">Goals</h1>
   </header>
@@ -34,39 +34,39 @@
     <div class="main__container">
       <!-- Goal Form -->
       <form action="/goals/addGoal" method="POST" class="main__form">
-          <label for="name" class="main__form-label">Goal Name</label>
-          <input type="text" id="name" name="name" required class="main__form-input">
+        <label for="name" class="main__form-label">Goal Name</label>
+        <input type="text" id="name" name="name" required class="main__form-input">
 
-          <label for="description" class="main__form-label">Description</label>
-          <textarea id="description" name="description" required class="main__form-input"></textarea>
+        <label for="description" class="main__form-label">Description</label>
+        <textarea id="description" name="description" required class="main__form-input"></textarea>
 
-          <label for="goalAmount" class="main__form-label">Goal Amount</label>
-          <input type="number" id="goalAmount" name="goalAmount" required class="main__form-input">
+        <label for="goalAmount" class="main__form-label">Goal Amount</label>
+        <input type="number" id="goalAmount" name="goalAmount" required class="main__form-input">
 
-          <label for="deadline" class="main__form-label">Deadline</label>
-          <input type="date" id="deadline" name="deadline" required class="main__form-input">
+        <label for="deadline" class="main__form-label">Deadline</label>
+        <input type="date" id="deadline" name="deadline" required class="main__form-input">
 
-          <button type="submit" class="main__form-submit">Save Goal</button>
+        <button type="submit" class="main__form-submit">Save Goal</button>
       </form>
 
       <!-- Display Goals -->
       <h2>Your Goals</h2>
       <div class="goals__list">
         <% goals.forEach(function(goal) { %>
-          <div class="goal-item">
-            <h3><%= goal.name %></h3>
-            <p><%= goal.description %></p>
-            <p> Current Saved: <%= goal.currentSaved %>/<%= goal.goalAmount %> </p> 
-            <p>Deadline: <%= goal.deadline %></p>
+        <div class="goal-item">
+          <h3><%= goal.name %></h3>
+          <p><%= goal.description %></p>
+          <p> Current Saved: <%= goal.currentSaved %>/<%= goal.goalAmount %> </p>
+          <p>Deadline: <%= goal.deadline %></p>
 
-            <!-- Add Money Form -->
-            <form action="/goals/addMoney" method="POST" class="goal-item__add-money-form">
-              <input type="hidden" name="goalId" value="<%= goal._id %>">
-              <label for="amount" class="goal-item__add-money-label">Add Money:</label>
-              <input type="number" name="amount" min="0" required class="goal-item__add-money-input">
-              <button type="submit" class="goal-item__add-money-button">Add Money</button>
-            </form>
-          </div>
+          <!-- Add Money Form -->
+          <form action="/goals/addMoney" method="POST" class="goal-item__add-money-form">
+            <input type="hidden" name="goalId" value="<%= goal._id %>">
+            <label for="amount" class="goal-item__add-money-label">Add Money:</label>
+            <input type="number" name="amount" min="0" required class="goal-item__add-money-input">
+            <button type="submit" class="goal-item__add-money-button">Add Money</button>
+          </form>
+        </div>
         <% }) %>
       </div>
     </div>
