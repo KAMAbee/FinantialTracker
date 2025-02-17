@@ -28,6 +28,11 @@
         <div class="main__users-list-item">
           <h3><%= user.username %> (<%= user.role %>)</h3>
           <p><%= user.email %></p>
+          <p>Created: <%= user.createdAt %></p>
+          <p>Transactions: 
+            <% let userTransactions = usersWithTransactionCount.find(u => u._id.toString() === user._id.toString()); %>
+            <%= userTransactions ? userTransactions.transactionsCount : 0 %>
+          </p>          
 
           <form class="main__form-update" action="/admin/updateRole" method="POST">
             <input type="hidden" name="userId" value="<%= user._id %>">
@@ -46,7 +51,7 @@
       <div class="main__stats">
         <h2>Stats</h2>
         <p>Total users: <%= usersCount %></p>
-        <p>Total transactions: <%= transactionsCount %></p>
+        <p>Total transactions: <%= transactionsCount %> (Incomes: <%= incomeCount %> | Expences: <%= expenseCount %>)</p>
         <p>Total goals: <%= goalsCount %> </p>
       </div>
     </div>

@@ -19,12 +19,56 @@ router.get('/', authenticateJWT, verifyRole, async (req, res) => {
     ]);
     const transactionsCount = transactionsCountAggregate[0].count;
 
-    const goalsCountAggregate = await Goal.aggregate([
+    const incomeCountAggregate = await Transaction.aggregate([
+        { $match: { type: 'income' } },
         { $count: "count" }
+    ]);
+
+    const expenseCountAggregate = await Transaction.aggregate([
+        { $match: { type: 'expense' } },
+        { $count: "count" }
+    ]);
+
+    const incomeCount = incomeCountAggregate.length > 0 ? incomeCountAggregate[0].count : 0;
+    const expenseCount = expenseCountAggregate.length > 0 ? expenseCountAggregate[0].count : 0;
+
+    const goalsCountAggregate = await Goal.aggregate([
+        { $count: "count" },
     ]);
     const goalsCount = goalsCountAggregate[0].count;
 
-    res.render('admin', { users, usersCount, transactionsCount, goalsCount, message: null });
+    const usersWithTransactionCount = await User.aggregate([
+        {
+            $lookup: {
+                from: Transaction.collection.name,
+                localField: "_id",
+                foreignField: "userId",
+                as: "transactions"
+            }
+        },
+        {
+            $addFields: {
+                transactionsCount: { $size: "$transactions" }
+            }
+        },
+        {
+            $project: {
+                transactionsCount: 1
+            }
+        }
+    ]);
+
+
+    res.render('admin', {
+        users,
+        usersWithTransactionCount,
+        usersCount,
+        transactionsCount,
+        incomeCount,
+        expenseCount,
+        goalsCount, 
+        message: null
+    });
 });
 
 router.post('/updateRole', authenticateJWT, verifyRole, async (req, res) => {
