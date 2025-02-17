@@ -11,6 +11,9 @@ const TransactionSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now, get: (date) => moment(date).format('DD-MM-YYYY') },
 });
 
+TransactionSchema.index({ userId: 1, type: 1 }); 
+TransactionSchema.index({ userId: 1, category: 1 });
+
 TransactionSchema.set('toJSON', { getters: true });
 
 module.exports = mongoose.model('Transaction', TransactionSchema);

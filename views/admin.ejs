@@ -4,9 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/admin.css">
   <title>Admin</title>
-  <link rel="stylesheet" href="admin.css">
-
 </head>
 
 <body>
@@ -17,21 +16,38 @@
   <main class="main">
     <div class="main__container">
       <h2>Users</h2>
-      <div class="users__list">
+
+      <% if (message) { %>
+      <div class="main__error">
+        <%= message %>
+      </div>
+      <% } %>
+
+      <div class="main__users-list">
         <% users.forEach(function(user) { %>
-        <div class="user-item">
+        <div class="main__users-list-item">
           <h3><%= user.username %> (<%= user.role %>)</h3>
           <p><%= user.email %></p>
-          <form action="/admin/updateRole" method="POST">
+
+          <form class="main__form-update" action="/admin/updateRole" method="POST">
             <input type="hidden" name="userId" value="<%= user._id %>">
-            <select name="role" id="role">
+
+            <select class="main__form-select" name="role" id="role">
               <option value="user" <% if (user.role === 'user') { %> selected <% } %>>User</option>
               <option value="admin" <% if (user.role === 'admin') { %> selected <% } %>>Admin</option>
             </select>
-            <button type="submit">Update Role</button>
+
+            <button class="main__form-submit" type="submit">Update Role</button>
           </form>
         </div>
         <% }) %>
+      </div>
+
+      <div class="main__stats">
+        <h2>Stats</h2>
+        <p>Total users: <%= usersCount %></p>
+        <p>Total transactions: <%= transactionsCount %></p>
+        <p>Total goals: <%= goalsCount %> </p>
       </div>
     </div>
   </main>

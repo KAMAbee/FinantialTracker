@@ -7,20 +7,24 @@ const { authenticateJWT } = require('../middleware/authMiddleware');
 router.get('/', authenticateJWT, async (req, res) => {
     try {
 
-        const incomeResult = await Transaction.aggregate([
-            { $match: { userId: new mongoose.Types.ObjectId(req.user.id), type: 'income' } },
-            { $group: { _id: null, total: { $sum: "$amount" } } }
+        const result = await Transaction.aggregate([
+            {
+                $match: { userId: new mongoose.Types.ObjectId(req.user.id) }
+            },
+            {
+                $group: {
+                    _id: "$type",
+                    total: { $sum: "$amount" }
+                }
+            }
         ]);
-        
-        const expenseResult = await Transaction.aggregate([
-            { $match: { userId: new mongoose.Types.ObjectId(req.user.id), type: 'expense' } },
-            { $group: { _id: null, total: { $sum: "$amount" } } }
-        ]);
-        
-        const totalIncome = incomeResult.length > 0 ? incomeResult[0].total : 0;
-        const totalExpense = expenseResult.length > 0 ? expenseResult[0].total : 0;
-        
 
+        let totalIncome = 0, totalExpense = 0;
+
+        result.forEach(entry => {
+            if (entry._id === "income") totalIncome = entry.total;
+            if (entry._id === "expense") totalExpense = entry.total;
+        });
         res.render('home', {
             message: null,
             totalIncome,

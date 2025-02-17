@@ -42,6 +42,10 @@ userSchema.methods.addDefaultCategories = function () {
     return this.save();
 };
 
+userSchema.index({ email: 1 });
+userSchema.index({ username: 1 });
+
+categorySchema.index({ userId: 1, name: 1 }, { unique: true }); 
 
 userSchema.set('toJSON', { getters: true });
 categorySchema.set('toJSON', { getters: true });
