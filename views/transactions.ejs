@@ -49,7 +49,7 @@
           <% }) %>
         </select>
       </div>
-      <button  class="main__form-delete">Delete category</button>
+      <button class="main__form-delete">Delete category</button>
       <div class="main__form-wrap">
         <label for="type" class="main__form-label">Type</label>
         <select id="type" class="main__form-select" name="type" required>
@@ -121,15 +121,76 @@
           </p>
           <p class="transaction-item__category">Category: <%= transaction.category %></p>
           <p class="transaction-item__date">Date: <%= transaction.createdAt %></p>
-          
-          <!-- Delete Button -->
-          
-            <button type="submit" class="transaction-item__delete-button">Delete Transaction</button>
+
+          <form action="/transactions/deleteTransaction" method="POST">
+            <input type="hidden" name="transactionId" value="<%= transaction._id %>">
+            <button type="submit" class="transaction-item__delete-button">✖️ </button>
+          </form>
+
+          <form action="#" method="POST" class="editTransactionForm">
+            <input type="hidden" name="transactionId" value="<%= transaction._id %>">
+            <button type="button" class="transactions__edit" data-id="<%= transaction._id %>" data-name="<%= transaction.name %>" data-amount="<%= transaction.amount %>" data-category="<%= transaction.category %>" data-type="<%= transaction.type %>">✏️</button>
+          </form>
+
         </div>
         <% }) %>
       </div>
     </section>
+
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <span class="close">✖️</span>
+        <h2>Edit Transaction</h2>
+        <form action="/transactions/updateTransaction" method="POST" id="editTransactionForm">
+          <input type="hidden" id="editTransactionId" name="transactionId">
+          <label for="editName">Name</label>
+          <input type="text" id="editName" name="name" required>
+
+          <label for="editAmount">Amount</label>
+          <input type="number" id="editAmount" name="amount" required>
+
+          <label for="editCategory">Category</label>
+          <select id="editCategory" name="category">
+            <% categories.forEach(category => { %>
+            <option value="<%= category.name %>"><%= category.name %></option>
+            <% }) %>
+          </select>
+
+          <label for="editType">Type</label>
+          <select id="editType" name="type">
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+
+          <button type="submit">Update</button>
+        </form>
+      </div>
+    </div>
+
   </main>
+
+  <script>
+    document.querySelectorAll('.transactions__edit').forEach(button => {
+      button.addEventListener('click', () => {
+        document.getElementById('editTransactionId').value = button.dataset.id;
+        document.getElementById('editName').value = button.dataset.name;
+        document.getElementById('editAmount').value = button.dataset.amount;
+        document.getElementById('editCategory').value = button.dataset.category;
+        document.getElementById('editType').value = button.dataset.type;
+        document.getElementById('editModal').style.display = "block";
+      });
+    });
+
+    document.querySelector('.close').addEventListener('click', () => {
+      document.getElementById('editModal').style.display = "none";
+    });
+
+    window.onclick = (event) => {
+      if (event.target == document.getElementById('editModal')) {
+        document.getElementById('editModal').style.display = "none";
+      }
+    };
+  </script>
 
 </body>
 

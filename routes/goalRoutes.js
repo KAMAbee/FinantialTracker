@@ -62,4 +62,25 @@ router.post('/addMoney', authenticateJWT, async (req, res) => {
     }
 });
 
+router.post('/deleteGoal', authenticateJWT, async (req, res) => {
+    try {
+        const { goalId } = req.body;
+        await Goal.findByIdAndDelete(goalId);
+        res.redirect('/goals');
+    } catch (err) {
+        return res.render('goals', { message: 'Error deleting goal' });
+    }
+});
+
+router.post('/updateGoal', authenticateJWT, async (req, res) => {
+    try {
+        const { goalId, name, amount, description, deadline} = req.body;
+        await Goal.findByIdAndUpdate(goalId, { name, amount, description, deadline });
+        res.redirect('/goals');
+    } catch (err) {
+        console.log(err)
+        return res.render('goals', { message: 'Error updating goal' });
+    }
+});
+
 module.exports = router;

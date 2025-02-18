@@ -97,4 +97,26 @@ router.post('/addCategory', authenticateJWT, async (req, res) => {
     }
 });
 
+
+router.post('/deleteTransaction', authenticateJWT, async (req, res) => {
+    try {
+        const { transactionId } = req.body;
+        await Transaction.findByIdAndDelete(transactionId);
+        res.redirect('/transactions');
+    } catch (err) {
+        return res.render('transaction', { message: 'Error deleting transaction' });
+    }
+});
+
+router.post('/updateTransaction', authenticateJWT, async (req, res) => {
+    try {
+        const { transactionId, name, amount, category, type } = req.body;
+        await Transaction.findByIdAndUpdate(transactionId, { name, amount, category, type });
+        res.redirect('/transactions');
+    } catch (err) {
+        return res.render('transaction', { message: 'Error updating transaction' });
+    }
+});
+
+
 module.exports = router;
