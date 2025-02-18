@@ -43,16 +43,16 @@
       </div>
       <div class="main__form-wrap">
         <label for="category" class="main__form-label">Category</label>
-        <!-- Category dropdown -->
-        <select id="category" class="main__form-input" name="category" required>
+        <select id="category" class="main__form-select" name="category" required>
           <% categories.forEach(category => { %>
           <option value="<%= category.name %>"><%= category.name %></option>
           <% }) %>
         </select>
       </div>
+      <button  class="main__form-delete">Delete category</button>
       <div class="main__form-wrap">
         <label for="type" class="main__form-label">Type</label>
-        <select id="type" class="main__form-input" name="type" required>
+        <select id="type" class="main__form-select" name="type" required>
           <option value="income">Income</option>
           <option value="expense">Expense</option>
         </select>
@@ -89,7 +89,7 @@
       <form action="/transactions" method="GET" class="main__form">
         <div class="main__form-wrap">
           <label for="categoryFilter" class="main__form-label">Filter by Category</label>
-          <select id="categoryFilter" class="main__form-input" name="category">
+          <select id="categoryFilter" class="main__form-select" name="category">
             <option value="">All Categories</option>
             <% categories.forEach(category => { %>
             <option value="<%= category.name %>" <%= category.name === selectedCategory ? 'selected' : '' %>><%= category.name %></option>
@@ -98,7 +98,7 @@
         </div>
         <div class="main__form-wrap">
           <label for="typeFilter" class="main__form-label">Filter by Type</label>
-          <select id="typeFilter" class="main__form-input" name="type">
+          <select id="typeFilter" class="main__form-select" name="type">
             <option value="">All Types</option>
             <option value="income" <%= selectedType === 'income' ? 'selected' : '' %>>Income</option>
             <option value="expense" <%= selectedType === 'expense' ? 'selected' : '' %>>Expense</option>
@@ -107,32 +107,27 @@
         <button type="submit" class="main__form-submit">Filter</button>
       </form>
 
-      <table class="transactions__table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Amount</th>
-            <th>Category</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% transactions.forEach(transaction => { %>
-          <tr>
-            <td><%= transaction.name %></td>
-            <td>
-              <% if (transaction.type == "income") { %>
-              <span class="income">+<%= transaction.amount %></span>
-              <% } else { %>
-              <span class="expense">-<%= transaction.amount %></span>
-              <% } %>
-            </td>
-            <td><%= transaction.category %></td>
-            <td><%= transaction.createdAt %></td>
-          </tr>
-          <% }) %>
-        </tbody>
-      </table>
+      <!-- Display Transactions as Cards -->
+      <div class="transactions__list">
+        <% transactions.forEach(transaction => { %>
+        <div class="transaction-item">
+          <h3 class="transaction-item__name"><%= transaction.name %></h3>
+          <p class="transaction-item__amount">
+            <% if (transaction.type == "income") { %>
+            <span class="income">+<%= transaction.amount %></span>
+            <% } else { %>
+            <span class="expense">-<%= transaction.amount %></span>
+            <% } %>
+          </p>
+          <p class="transaction-item__category">Category: <%= transaction.category %></p>
+          <p class="transaction-item__date">Date: <%= transaction.createdAt %></p>
+          
+          <!-- Delete Button -->
+          
+            <button type="submit" class="transaction-item__delete-button">Delete Transaction</button>
+        </div>
+        <% }) %>
+      </div>
     </section>
   </main>
 

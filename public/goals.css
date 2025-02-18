@@ -1,195 +1,199 @@
 html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-  }
-  
-  body {
-    background: linear-gradient(to bottom, #fbb1bd, #91c9e8);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    color: #333;
-    background-attachment: fixed;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-  }
-  
-  .navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #007aff;
-    padding: 10px 0;
-    z-index: 1000;
-  }
-  
-  .navbar__list {
-    display: flex;
-    justify-content: flex-start;
-    gap: 20px;
-    list-style: none;
-    margin: 0;
-    padding-left: 20px;
-  }
-  
-  .navbar__link {
-    color: #fff;
-    font-size: 18px;
-    text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 10px;
-    transition: background-color 0.3s;
-  }
-  
-  .navbar__link:hover {
-    background-color: #005bb5;
-  }
-  
-  .navbar__link--active {
-    background-color: #005bb5;
-  }
-  
-  .header {
-    font-size: 35px;
-    font-weight: bold;
-    text-align: center;
-    color: #333;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-    margin-top: 25px;
-  }
-  
-  
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
 
-  .main {
-    margin-top: 25px; /* Add space to account for fixed navbar */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-  }
-  
-  .main__container {
-    width: 100%;
-    max-width: 700px; /* Max width of content */
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .main__form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .main__form-input {
-    width: 95%;
-    height: 40px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    font-size: 16px;
-    padding: 0 10px;
-    background: #fff;
-    color: #333;
-  }
-  
-  .main__form-input::placeholder {
-    color: #aaa;
-  }
-  
-  .main__form-submit {
-    width: 50%;
-    height: 40px;
-    border-radius: 10px;
-    border: none;
-    margin-top: 10px;
-    background-color: #007aff;
-    color: #fff;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .main__form-submit:hover {
-    background-color: #005bb5;
-  }
-  
-  .main__form-submit:active {
-    background-color: #004494;
-  }
-  
-  .goals__list {
-    margin-top: 40px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .goal-item {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s;
-  }
-  
-  .goal-item:hover {
-    background-color: #f1f1f1;
-  }
-  
-  .goal-item__add-money-button {
-    width: 50%;
-    height: 40px;
-    border-radius: 10px;
-    border: none;
-    margin-top: 10px;
-    background-color: #007aff;
-    color: #fff;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .goal-item__add-money-button:hover {
-    background-color: #005bb5;
-  }
-  
-  .goal-item__add-money-button:active {
-    background-color: #004494;
-  }
-  
-  /* Центрируем кнопки в контейнерах */
-  .main__form-submit,
-  .goal-item__add-money-button {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  /* Контейнер для кнопок (если есть несколько кнопок) */
-  .goal-item__add-money-form {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  /* Поле ввода для добавления денег */
-  .goal-item__add-money-input {
-    width: 90%;  /* Уменьшаем ширину поля ввода */
-    height: 35px;  /* Уменьшаем высоту */
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    font-size: 16px;
-    padding: 0 10px;
-    background: #fff;
-    color: #333;
-  }
-  
-  .goal-item__add-money-input::placeholder {
-    color: #aaa;
-  }  
+body {
+  background: linear-gradient(to bottom, #fbb1bd, #91c9e8);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #333;
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #007aff;
+  padding: 10px 0;
+  z-index: 1000;
+}
+
+.navbar__list {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.navbar__link {
+  color: #fff;
+  font-size: 18px;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  transition: background-color 0.3s;
+}
+
+.navbar__link:hover {
+  background-color: #005bb5;
+}
+
+.navbar__link--active {
+  background-color: #005bb5;
+}
+
+.header {
+  font-size: 35px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 35px;
+}
+
+.main {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.main__container {
+  width: 100%;
+  max-width: 500px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.main__form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.main__form-input {
+  width: 95%;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+  padding: 0 10px;
+  background: #fff;
+  color: #333;
+}
+
+.main__form-input::placeholder {
+  color: #aaa;
+}
+
+.main__form-submit {
+  width: 50%;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  margin-top: 10px;
+  background-color: #007aff;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.main__form-submit:hover {
+  background-color: #005bb5;
+}
+
+.main__form-submit:active {
+  background-color: #004494;
+}
+
+.goals__list {
+  margin-top: 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.goal-item {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+}
+
+.goal-item:hover {
+  background-color: #f1f1f1;
+}
+
+.goal-item--completed {
+  background-color: #d3d3d3;
+  opacity: 0.7;
+}
+
+.goal-item--completed:hover {
+  background-color: #d3d3d3;
+}
+
+.goal-item__add-money-button {
+  width: 50%;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  margin-top: 10px;
+  background-color: #007aff;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.goal-item__add-money-button:hover {
+  background-color: #005bb5;
+}
+
+.goal-item__add-money-button:active {
+  background-color: #004494;
+}
+
+.main__form-submit,
+.goal-item__add-money-button {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.goal-item__add-money-form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.goal-item__add-money-input {
+  width: 90%;
+  height: 35px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+  padding: 0 10px;
+  background: #fff;
+  color: #333;
+}
+
+.goal-item__add-money-input::placeholder {
+  color: #aaa;
+}
