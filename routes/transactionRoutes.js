@@ -27,7 +27,6 @@ router.get('/', authenticateJWT, async (req, res) => {
             message: null, 
             transactions, 
             categories,
-            categoryMessage: null,
             selectedType: type
         });
     } catch (err) {
@@ -55,38 +54,37 @@ router.post('/addTransactions', authenticateJWT, async (req, res) => {
     }
 });
 
-// Add category
+// Add category with check for existing category
 router.post('/addCategory', authenticateJWT, async (req, res) => {
     try {
         const { categoryName } = req.body;
-
         const user = await User.findById(req.user.id);
 
+        
+        const existingCategory = user.categories.find(category => category.name.toLowerCase() === categoryName.toLowerCase());
+
+        if (existingCategory) {
+            
+            return res.json({ success: false, message: 'Category already exists' });
+        }
+
+        
         const newCategory = {
             userId: req.user.id,
             name: categoryName,
             isDefault: false
         };
 
-        const updateResult = await User.updateOne(
-            { _id: req.user.id },
-            { $addToSet: { categories: newCategory } }
-        );
+        user.categories.push(newCategory);
+        await user.save();
 
-        if (updateResult.nModified === 0) {
-            return res.render('transactions', {
-                message: null,
-                transactions: await Transaction.find({ userId: req.user.id }),
-                categories: user.categories,
-                categoryMessage: 'Category already exists'
-            });
-        }
-
-        res.redirect('/transactions');
+        res.json({ success: true });
     } catch (err) {
-        res.status(500).json({ error: 'Error adding category' });
+        res.status(500).json({ success: false, message: 'Error adding category' });
     }
 });
+
+
 
 // Delete transaction
 router.post('/deleteTransaction', authenticateJWT, async (req, res) => {
@@ -109,6 +107,5 @@ router.post('/updateTransaction', authenticateJWT, async (req, res) => {
         return res.render('transaction', { message: 'Error updating transaction' });
     }
 });
-
 
 module.exports = router;

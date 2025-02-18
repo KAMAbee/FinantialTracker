@@ -69,17 +69,11 @@
       <button type="submit" class="main__form-submit">Add Transaction</button>
     </form>
 
-    <form action="/transactions/addCategory" method="POST" class="main__form">
+    <form id="addCategoryForm" action="/transactions/addCategory" method="POST" class="main__form">
       <div class="main__form-wrap">
         <label for="newCategory" class="main__form-label">Add New Category</label>
         <input type="text" id="newCategory" class="main__form-input" name="categoryName" placeholder="Category Name" required>
       </div>
-
-      <% if (categoryMessage) { %>
-      <div class="main__form-error">
-        <%= categoryMessage %>
-      </div>
-      <% } %>
 
       <button type="submit" class="main__form-submit">Add Category</button>
     </form>
@@ -93,7 +87,7 @@
           <select id="categoryFilter" class="main__form-select" name="category">
             <option value="">All Categories</option>
             <% categories.forEach(category => { %>
-            <option value="<%= category.name %>" <%= category.name === selectedCategory ? 'selected' : '' %>><%= category.name %></option>
+            <option value="<%= category.name %>"><%= category.name %></option>
             <% }) %>
           </select>
         </div>
@@ -101,8 +95,8 @@
           <label for="typeFilter" class="main__form-label">Filter by Type</label>
           <select id="typeFilter" class="main__form-select" name="type">
             <option value="">All Types</option>
-            <option value="income" <%= selectedType === 'income' ? 'selected' : '' %>>Income</option>
-            <option value="expense" <%= selectedType === 'expense' ? 'selected' : '' %>>Expense</option>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
           </select>
         </div>
         <button type="submit" class="main__form-submit">Filter</button>
@@ -124,7 +118,7 @@
 
           <form action="/transactions/deleteTransaction" method="POST">
             <input type="hidden" name="transactionId" value="<%= transaction._id %>">
-            <button type="submit" class="transaction-item__delete-button">✖️ </button>
+            <button type="submit" class="transaction-item__delete-button">✖️</button>
           </form>
 
           <form action="#" method="POST" class="editTransactionForm">
@@ -190,8 +184,32 @@
         document.getElementById('editModal').style.display = "none";
       }
     };
-  </script>
 
+    
+    document.getElementById('addCategoryForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      
+      const form = event.target;
+      const formData = new FormData(form);
+      const categoryName = formData.get('categoryName');
+
+      const response = await fetch('/transactions/addCategory', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ categoryName }),
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        alert(result.message);  
+      } else {
+        window.location.reload();  
+      }
+    });
+  </script>
 </body>
 
 </html>
