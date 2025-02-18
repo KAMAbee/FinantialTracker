@@ -149,6 +149,7 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+// Reset Password
 router.get('/reset', (req, res) => {
     res.render('reset', { message: null, messageType: null });
 });
@@ -186,6 +187,7 @@ router.post('/reset', async (req, res) => {
     }
 });
 
+// Reset Code
 router.post('/resetcode', async (req, res) => {
     try {
         const { resetcode } = req.body;

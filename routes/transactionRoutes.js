@@ -4,7 +4,7 @@ const Transaction = require('../models/Transaction');
 const User = require('../models/User');
 const { authenticateJWT } = require('../middleware/authMiddleware');
 
-// Get all transactions and categories for the user with optional filters
+// Get all transactions
 router.get('/', authenticateJWT, async (req, res) => {
     try {
         const { category, type } = req.query;
@@ -28,7 +28,6 @@ router.get('/', authenticateJWT, async (req, res) => {
             transactions, 
             categories,
             categoryMessage: null,
-            selectedCategory: category,
             selectedType: type
         });
     } catch (err) {
@@ -36,7 +35,7 @@ router.get('/', authenticateJWT, async (req, res) => {
     }
 });
 
-// Add a new transaction
+// Add transaction
 router.post('/addTransactions', authenticateJWT, async (req, res) => {
     try {
         const { name, amount, category, type } = req.body;
@@ -56,24 +55,25 @@ router.post('/addTransactions', authenticateJWT, async (req, res) => {
     }
 });
 
-// Add a new category to the user's account
+// Add category
 router.post('/addCategory', authenticateJWT, async (req, res) => {
     try {
         const { categoryName } = req.body;
 
-        if (!categoryName) {
-            return res.render('transactions', {
-                message: null,
-                transactions: await Transaction.find({ userId: req.user.id }),
-                categories: (await User.findById(req.user.id)).categories,
-                categoryMessage: 'Category name is required'
-            });
-        }
-
         const user = await User.findById(req.user.id);
-        
-        const categoryExists = user.categories.some(category => category.name.toLowerCase() === categoryName.toLowerCase());
-        if (categoryExists) {
+
+        const newCategory = {
+            userId: req.user.id,
+            name: categoryName,
+            isDefault: false
+        };
+
+        const updateResult = await User.updateOne(
+            { _id: req.user.id },
+            { $addToSet: { categories: newCategory } }
+        );
+
+        if (updateResult.nModified === 0) {
             return res.render('transactions', {
                 message: null,
                 transactions: await Transaction.find({ userId: req.user.id }),
@@ -82,22 +82,13 @@ router.post('/addCategory', authenticateJWT, async (req, res) => {
             });
         }
 
-        const newCategory = { 
-            userId: req.user.id,
-            name: categoryName,
-            isDefault: false
-        };
-
-        user.categories.push(newCategory);
-        await user.save();
-
         res.redirect('/transactions');
     } catch (err) {
         res.status(500).json({ error: 'Error adding category' });
     }
 });
 
-
+// Delete transaction
 router.post('/deleteTransaction', authenticateJWT, async (req, res) => {
     try {
         const { transactionId } = req.body;
@@ -108,6 +99,7 @@ router.post('/deleteTransaction', authenticateJWT, async (req, res) => {
     }
 });
 
+// Update transaction
 router.post('/updateTransaction', authenticateJWT, async (req, res) => {
     try {
         const { transactionId, name, amount, category, type } = req.body;

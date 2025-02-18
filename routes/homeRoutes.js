@@ -4,6 +4,7 @@ const Transaction = require('../models/Transaction');
 const mongoose = require('mongoose');
 const { authenticateJWT } = require('../middleware/authMiddleware');
 
+// Get sum of transactions on homepage
 router.get('/', authenticateJWT, async (req, res) => {
     try {
 

@@ -5,25 +5,27 @@ const Transaction = require('../models/Transaction');
 const Goal = require('../models/Goal');
 const { authenticateJWT, verifyRole } = require('../middleware/authMiddleware');
 
-
+// Get all users
 router.get('/', authenticateJWT, verifyRole, async (req, res) => {
     const users = await User.find({});
 
+    // Get count of all users
     const usersCountAggregate = await User.aggregate([
         { $count: "count" }
     ]);
     const usersCount = usersCountAggregate[0].count;
 
+    // Get count of all transactions
     const transactionsCountAggregate = await Transaction.aggregate([
         { $count: "count" }
     ]);
     const transactionsCount = transactionsCountAggregate[0].count;
 
+    // Get count of income and expense transactions
     const incomeCountAggregate = await Transaction.aggregate([
         { $match: { type: 'income' } },
         { $count: "count" }
     ]);
-
     const expenseCountAggregate = await Transaction.aggregate([
         { $match: { type: 'expense' } },
         { $count: "count" }
@@ -32,11 +34,14 @@ router.get('/', authenticateJWT, verifyRole, async (req, res) => {
     const incomeCount = incomeCountAggregate.length > 0 ? incomeCountAggregate[0].count : 0;
     const expenseCount = expenseCountAggregate.length > 0 ? expenseCountAggregate[0].count : 0;
 
+
+    // Get count of all goals
     const goalsCountAggregate = await Goal.aggregate([
         { $count: "count" },
     ]);
     const goalsCount = goalsCountAggregate[0].count;
 
+    // Get count of transactions for each user
     const usersWithTransactionCount = await User.aggregate([
         {
             $lookup: {
@@ -71,6 +76,8 @@ router.get('/', authenticateJWT, verifyRole, async (req, res) => {
     });
 });
 
+
+// Update user role
 router.post('/updateRole', authenticateJWT, verifyRole, async (req, res) => {
     try {
         const { userId, role } = req.body;

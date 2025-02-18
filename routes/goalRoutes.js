@@ -44,7 +44,6 @@ router.post('/addMoney', authenticateJWT, async (req, res) => {
             return res.status(404).json({ error: 'Goal not found' });
         }
 
-        // Ensure that the amount to add is positive and doesn't exceed the goal amount
         if (amount <= 0) {
             return res.status(400).json({ error: 'Amount must be positive' });
         }
@@ -62,6 +61,7 @@ router.post('/addMoney', authenticateJWT, async (req, res) => {
     }
 });
 
+// Delete goal
 router.post('/deleteGoal', authenticateJWT, async (req, res) => {
     try {
         const { goalId } = req.body;
@@ -72,6 +72,7 @@ router.post('/deleteGoal', authenticateJWT, async (req, res) => {
     }
 });
 
+// Update goal
 router.post('/updateGoal', authenticateJWT, async (req, res) => {
     try {
         const { goalId, name, amount, description, deadline} = req.body;

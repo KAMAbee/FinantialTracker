@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 
+// Middleware to authenticate JWT
 function authenticateJWT(req, res, next) {
     const token = req.cookies.token;
     if (!token) {
@@ -15,6 +16,7 @@ function authenticateJWT(req, res, next) {
     }
 }
 
+// Middleware to verify user role
 function verifyRole(req, res, next) {
     if (req.user.role !== "admin") {
         return res.redirect('/login');
