@@ -42,8 +42,8 @@ userSchema.methods.addDefaultCategories = function () {
     return this.save();
 };
 
-userSchema.index({ email: 1 });
-userSchema.index({ username: 1 });
+userSchema.index({ email: 1 }, { unique: true });
+userSchema.index({ username: 1 }, { unique: true });
 
 categorySchema.index({ userId: 1, name: 1 }, { unique: true }); 
 

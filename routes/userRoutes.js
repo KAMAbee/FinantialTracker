@@ -29,18 +29,20 @@ router.get('/registration', redirectIfAuthenticated, (req, res) => {
 router.post('/registration', async (req, res) => {
     try {
         const { username, email, password, repeatPassword } = req.body;
+        const existingUser = await User.findOne({
+            $or: [{ username }, { email }]
+        });
 
-        const existingUsername = await User.findOne({ username });
-        if (existingUsername) {
-            return res.render('registration', { message: 'User with this username is already exists' });
+        if (existingUser) {
+            if (existingUser.username === username) {
+                return res.render('registration', { message: 'User with this username already exists' });
+            }
+            if (existingUser.email === email) {
+                return res.render('registration', { message: 'User with this email already exists' });
+            }
         }
 
-        const existingEmail = await User.findOne({ email });
-        if (existingEmail) {
-            return res.render('registration', { message: 'User with this email is already exists' });
-        }
-
-        if(password !== repeatPassword){
+        if (password !== repeatPassword) {
             return res.render('registration', { message: 'Passwords are not same' });
         }
 
