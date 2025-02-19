@@ -7,7 +7,11 @@ const { authenticateJWT, verifyRole } = require('../middleware/authMiddleware');
 
 // Get all users
 router.get('/', authenticateJWT, verifyRole, async (req, res) => {
-    const users = await User.find({});
+    const page = parseInt(req.query.page) || 1;
+    const limit = 5;
+    const users = await User.find({})
+    .skip((page - 1) * limit)
+    .limit(limit);
 
     // Get count of all users
     const usersCountAggregate = await User.aggregate([
@@ -63,6 +67,7 @@ router.get('/', authenticateJWT, verifyRole, async (req, res) => {
         }
     ]);
 
+    const totalPages = Math.ceil(usersCount / limit);
 
     res.render('admin', {
         users,
@@ -72,6 +77,8 @@ router.get('/', authenticateJWT, verifyRole, async (req, res) => {
         incomeCount,
         expenseCount,
         goalsCount, 
+        currentPage: page,
+        totalPages,
         message: null
     });
 });

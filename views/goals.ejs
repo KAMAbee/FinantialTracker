@@ -49,15 +49,11 @@
         <button type="submit" class="main__form-submit">Save Goal</button>
       </form>
 
-      <!-- Display Goals -->
       <h2>Your Goals</h2>
       <div class="goals__list">
         <% goals.forEach(function(goal) { %>
         <div class="goal-item <%= goal.currentSaved >= goal.goalAmount ? 'goal-item--completed' : '' %>">
           <h3><%= goal.name %></h3>
-
-
-
 
           <form action="/goals/deleteGoal" method="POST">
             <input type="hidden" name="goalId" value="<%= goal._id %>">
@@ -75,7 +71,6 @@
           <p>Current Saved: <%= goal.currentSaved %>/<%= goal.goalAmount %></p>
           <p>Deadline: <%= goal.deadline %></p>
 
-          <!-- Add Money Form -->
           <form action="/goals/addMoney" method="POST" class="goal-item__add-money-form">
             <input type="hidden" name="goalId" value="<%= goal._id %>">
             <label for="amount" class="goal-item__add-money-label">Add Money:</label>
@@ -84,7 +79,19 @@
           </form>
         </div>
         <% }) %>
-      </div>
+
+        <div class="pagination">
+          <% if (currentPage > 1) { %>
+            <a href="?page=<%= currentPage - 1 %>&limit=5" class="pagination__prev">⬅️</a>
+          <% } %>
+        
+          <span>Page <%= currentPage %> / <%= totalPages %></span>
+        
+          <% if (currentPage < totalPages) { %>
+            <a href="?page=<%= currentPage + 1 %>&limit=5" class="pagination__next">➡️</a>
+          <% } %>
+        </div>
+      </div> 
     </div>
 
     <div id="editModal" class="modal">

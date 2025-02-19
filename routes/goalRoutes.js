@@ -7,8 +7,21 @@ const { authenticateJWT } = require('../middleware/authMiddleware');
 // Get all goals
 router.get('/', authenticateJWT, async (req, res) => {
     try {
-        const goals = await Goal.find({ userId: req.user.id });
-        res.render('goals', { message: null, goals });
+        const { page = 1, limit = 5 } = req.query;
+        const userId = req.user.id;
+
+        const totalGoals = await Goal.countDocuments({ userId });
+        const totalPages = Math.ceil(totalGoals / limit);
+        const goals = await Goal.find({ userId })
+            .skip((page - 1) * limit)
+            .limit(parseInt(limit));
+
+        res.render('goals', { 
+            message: null, 
+            goals, 
+            currentPage: parseInt(page),
+            totalPages
+        });
     } catch (err) {
         res.status(500).json({ error: 'Error fetching goals' });
     }
@@ -68,7 +81,7 @@ router.post('/deleteGoal', authenticateJWT, async (req, res) => {
         await Goal.findByIdAndDelete(goalId);
         res.redirect('/goals');
     } catch (err) {
-        return res.render('goals', { message: 'Error deleting goal' });
+        res.status(500).json({ error: 'Error deleting goal' });
     }
 });
 
@@ -79,8 +92,8 @@ router.post('/updateGoal', authenticateJWT, async (req, res) => {
         await Goal.findByIdAndUpdate(goalId, { name, amount, description, deadline });
         res.redirect('/goals');
     } catch (err) {
-        console.log(err)
-        return res.render('goals', { message: 'Error updating goal' });
+        res.status(500).json({ error: 'Error updating goal' });
+
     }
 });
 

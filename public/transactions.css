@@ -270,3 +270,7 @@ body {
   font-size: 24px;
   cursor: pointer;
 }
+
+.pagination__prev, .pagination__next{
+  text-decoration: none;
+}

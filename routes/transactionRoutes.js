@@ -7,32 +7,34 @@ const { authenticateJWT } = require('../middleware/authMiddleware');
 // Get all transactions
 router.get('/', authenticateJWT, async (req, res) => {
     try {
-        const { category, type } = req.query;
+        const { category, type, page = 1, limit = 5 } = req.query;
         const user = await User.findById(req.user.id);
         const categories = user.categories;
 
         let filter = { userId: req.user.id };
 
-        if (category) {
-            filter.category = category;
-        }
+        if (category) filter.category = category;
+        if (type) filter.type = type;
 
-        if (type) {
-            filter.type = type;
-        }
-
-        const transactions = await Transaction.find(filter);
+        const totalTransactions = await Transaction.countDocuments(filter);
+        const totalPages = Math.ceil(totalTransactions / limit);
+        const transactions = await Transaction.find(filter)
+            .skip((page - 1) * limit)
+            .limit(parseInt(limit));
 
         res.render('transactions', { 
             message: null, 
             transactions, 
             categories,
-            selectedType: type
+            selectedType: type,
+            currentPage: parseInt(page),
+            totalPages
         });
     } catch (err) {
         res.status(500).json({ error: 'Error fetching transactions' });
     }
 });
+
 
 // Add transaction
 router.post('/addTransactions', authenticateJWT, async (req, res) => {
@@ -93,7 +95,7 @@ router.post('/deleteTransaction', authenticateJWT, async (req, res) => {
         await Transaction.findByIdAndDelete(transactionId);
         res.redirect('/transactions');
     } catch (err) {
-        return res.render('transaction', { message: 'Error deleting transaction' });
+        res.status(500).json({ error: 'Error deleting transaction' });
     }
 });
 
@@ -104,7 +106,7 @@ router.post('/updateTransaction', authenticateJWT, async (req, res) => {
         await Transaction.findByIdAndUpdate(transactionId, { name, amount, category, type });
         res.redirect('/transactions');
     } catch (err) {
-        return res.render('transaction', { message: 'Error updating transaction' });
+        res.status(500).json({ error: 'Error updating transaction' });
     }
 });
 

@@ -128,6 +128,17 @@
 
         </div>
         <% }) %>
+        <div class="pagination">
+          <% if (currentPage > 1) { %>
+            <a href="?page=<%= currentPage - 1 %>&limit=5" class="pagination__prev">⬅️</a>
+          <% } %>
+        
+          <span>Page <%= currentPage %> / <%= totalPages %></span>
+        
+          <% if (currentPage < totalPages) { %>
+            <a href="?page=<%= currentPage + 1 %>&limit=5" class="pagination__next">➡️</a>
+          <% } %>
+        </div>
       </div>
     </section>
 
