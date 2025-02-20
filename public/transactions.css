@@ -124,6 +124,9 @@ body {
   color: #333;
 }
 
+.filter{
+  width: 200px;
+}
 .main__form-submit {
   width: 60%;
   height: 40px;
@@ -412,4 +415,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+
+.filter-form{
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 30px !important; 
 }

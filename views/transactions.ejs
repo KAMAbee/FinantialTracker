@@ -41,7 +41,7 @@
 
         <div class="main__form-wrap">
           <label for="amount" class="main__form-label">Amount</label>
-          <input type="number" id="amount" class="main__form-input" name="amount" placeholder="Amount" required>
+          <input type="number" id="amount" class="main__form-input" min="0" name="amount" placeholder="Amount" required>
         </div>
 
         <div class="main__form-wrap">
@@ -109,24 +109,26 @@
       <h2>All Transactions</h2>
 
       <form action="/transactions" method="GET" class="main__form">
-        <div class="main__form-wrap">
-          <label for="categoryFilter" class="main__form-label">Filter by Category</label>
-          <select id="categoryFilter" class="main__form-select" name="category">
-            <option value="">All Categories</option>
-            <% categories.forEach(category=> { %>
-              <option value="<%= category.name %>">
-                <%= category.name %>
-              </option>
-              <% }) %>
-          </select>
-        </div>
-        <div class="main__form-wrap">
-          <label for="typeFilter" class="main__form-label">Filter by Type</label>
-          <select id="typeFilter" class="main__form-select" name="type">
-            <option value="">All Types</option>
-            <option value="income">Income</option>
-            <option value="expense">Expense</option>
-          </select>
+        <div class="filter-form">
+          <div class="main__form-wrap">
+            <label for="categoryFilter" class="main__form-label">Filter by Category</label>
+            <select id="categoryFilter" class="main__form-select filter" name="category">
+              <option value="">All Categories</option>
+              <% categories.forEach(category=> { %>
+                <option value="<%= category.name %>">
+                  <%= category.name %>
+                </option>
+                <% }) %>
+            </select>
+          </div>
+          <div class="main__form-wrap">
+            <label for="typeFilter" class="main__form-label">Filter by Type</label>
+            <select id="typeFilter" class="main__form-select filter" name="type">
+              <option value="">All Types</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+            </select>
+          </div>
         </div>
         <button type="submit" class="main__form-submit">Filter</button>
       </form>

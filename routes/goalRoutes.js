@@ -13,6 +13,7 @@ router.get('/', authenticateJWT, async (req, res) => {
         const totalGoals = await Goal.countDocuments({ userId });
         const totalPages = Math.ceil(totalGoals / limit);
         const goals = await Goal.find({ userId })
+            .sort({deadline: 1})
             .skip((page - 1) * limit)
             .limit(parseInt(limit));
 

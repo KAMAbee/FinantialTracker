@@ -19,6 +19,7 @@ router.get('/', authenticateJWT, async (req, res) => {
         const totalTransactions = await Transaction.countDocuments(filter);
         const totalPages = Math.ceil(totalTransactions / limit);
         const transactions = await Transaction.find(filter)
+            .sort({createdAt: -1}) 
             .skip((page - 1) * limit)
             .limit(parseInt(limit));
 
