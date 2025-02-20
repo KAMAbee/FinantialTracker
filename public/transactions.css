@@ -282,7 +282,7 @@ body {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Затемнение фона */
+  background-color: rgba(0, 0, 0, 0.5); 
 }
 
 .modal-content {
@@ -370,7 +370,6 @@ body {
 .modal-content .main__form-delete:active {
   background-color: #9a1610;
 }
-/* Стили для кнопок в карточках транзакций */
 .transaction-item__button {
   padding: 10px 20px;
   background-color: #007aff;
@@ -404,7 +403,6 @@ body {
   background-color: #9a1610;
 }
 
-/* Центровка кнопок внизу карточки */
 .transaction-item__actions {
   display: flex;
   justify-content: space-between;

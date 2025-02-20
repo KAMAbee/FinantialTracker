@@ -10,20 +10,21 @@
 
 <body>
   <header class="header">
-    <h2 class="header__title">Admin page</h2>
+    <h2 class="header__title">Admin Page</h2>
   </header>
 
   <main class="main">
     <div class="main__container">
-      <h2>Users</h2>
-
-      <% if (message) { %>
-      <div class="main__error">
-        <%= message %>
-      </div>
-      <% } %>
-
+      
       <div class="main__users-list">
+        <h2>Users</h2>
+
+        <% if (message) { %>
+        <div class="main__error">
+          <%= message %>
+        </div>
+        <% } %>
+
         <% users.forEach(function(user) { %>
         <div class="main__users-list-item">
           <h3><%= user.username %> (<%= user.role %>)</h3>
@@ -36,12 +37,10 @@
 
           <form class="main__form-update" action="/admin/updateRole" method="POST">
             <input type="hidden" name="userId" value="<%= user._id %>">
-
             <select class="main__form-select" name="role" id="role">
               <option value="user" <% if (user.role === 'user') { %> selected <% } %>>User</option>
               <option value="admin" <% if (user.role === 'admin') { %> selected <% } %>>Admin</option>
             </select>
-
             <button class="main__form-submit" type="submit">Update Role</button>
           </form>
         </div>
@@ -60,14 +59,13 @@
             <% } %>
           <% } %>
         </div>
-        
       </div>
 
       <div class="main__stats">
         <h2>Stats</h2>
         <p>Total users: <%= usersCount %></p>
-        <p>Total transactions: <%= transactionsCount %> (Incomes: <%= incomeCount %> | Expences: <%= expenseCount %>)</p>
-        <p>Total goals: <%= goalsCount %> </p>
+        <p>Total transactions: <%= transactionsCount %> (Incomes: <%= incomeCount %> | Expenses: <%= expenseCount %>)</p>
+        <p>Total goals: <%= goalsCount %></p>
       </div>
     </div>
   </main>

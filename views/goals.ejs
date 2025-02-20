@@ -91,7 +91,6 @@
               <p>Current Saved: <%= goal.currentSaved %> / <%= goal.goalAmount %></p>
               <p>Deadline: <%= goal.deadline %></p>
           
-              <!-- Добавление денег -->
               <form action="/goals/addMoney" method="POST" class="goal-item__add-money-form">
                 <input type="hidden" name="goalId" value="<%= goal._id %>" />
                 <label for="amount" class="goal-item__add-money-label">Add Money:</label>
