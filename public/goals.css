@@ -6,14 +6,16 @@ html, body {
 }
 
 body {
-  background: linear-gradient(to bottom, #fbb1bd, #91c9e8);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  color: #333;
-  background-attachment: fixed;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #333;
+  background: linear-gradient(to bottom, #fbb1bd, #91c9e8);
+  background-attachment: fixed;
+  overflow-y: auto;
+  height: 100vh;
 }
 
 .navbar {
@@ -55,37 +57,46 @@ body {
 .header {
   font-size: 35px;
   font-weight: bold;
-  text-align: center;
   color: #333;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
   margin-top: 35px;
+  text-align: center;
+  z-index: 999;
+  width: 100%;
 }
 
 .main {
-  margin-top: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
-
-.main__container {
-  width: 100%;
-  max-width: 500px;
-  padding: 20px;
   background: rgba(255, 255, 255, 0.8);
+  padding: 20px;
   border-radius: 15px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 480px;
+  margin-top: 20px;
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .main__form {
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   gap: 15px;
+  width: 100%;
+}
+
+.main__form-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .main__form-input {
-  width: 95%;
+  width: 350px;
   height: 40px;
   border: 1px solid #ccc;
   border-radius: 10px;
@@ -95,12 +106,19 @@ body {
   color: #333;
 }
 
-.main__form-input::placeholder {
-  color: #aaa;
+.main__form-select {
+  width: 375px;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+  padding: 0 10px;
+  background: #fff;
+  color: #333;
 }
 
 .main__form-submit {
-  width: 50%;
+  width: 60%;
   height: 40px;
   border-radius: 10px;
   border: none;
@@ -119,6 +137,13 @@ body {
 .main__form-submit:active {
   background-color: #004494;
 }
+
+h2 {
+  text-align: left;
+  margin-left: 100px; 
+  width: 100%; 
+}
+
 
 .goals__list {
   margin-top: 40px;
@@ -171,13 +196,6 @@ body {
   background-color: #004494;
 }
 
-.main__form-submit,
-.goal-item__add-money-button {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .goal-item__add-money-form {
   display: flex;
   justify-content: center;
@@ -199,7 +217,6 @@ body {
   color: #aaa;
 }
 
-
 .modal {
   display: none;
   position: fixed;
@@ -210,6 +227,7 @@ body {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
 }
+
 .modal-content {
   background-color: white;
   padding: 20px;
@@ -217,12 +235,177 @@ body {
   width: 30%;
   border-radius: 8px;
 }
+
 .close {
   float: right;
   font-size: 24px;
   cursor: pointer;
 }
 
-.pagination__prev, .pagination__next{
+.pagination__prev, .pagination__next {
   text-decoration: none;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); 
+}
+
+.modal-content {
+  background-color: white;
+  padding: 30px;
+  margin: 10% auto;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+}
+
+.modal-content h2 {
+  font-size: 24px;
+  margin-left: 150px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.modal-content label {
+  font-size: 16px;
+  color: #333;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.modal-content input[type="text"] {
+  width: 95%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+
+.modal-content input[type="date"] {
+  width: 95%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  color: #333;
+  background-color: #fff;
+  transition: border-color 0.3s;
+}
+
+.modal-content input[type="date"]:focus {
+  border-color: #007aff;
+  outline: none;
+}
+
+.modal-content input[type="number"]
+{
+  width: 95%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.modal-content select {
+  background-color: #fff; 
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.modal-content button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007aff;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.modal-content button:hover {
+  background-color: #005bb5;
+}
+
+.modal-content button:active {
+  background-color: #004494;
+}
+
+.modal-content .main__form-delete {
+  background-color: #ff3b30;
+}
+
+.modal-content .main__form-delete:hover {
+  background-color: #bd1b13;
+}
+
+.modal-content .main__form-delete:active {
+  background-color: #9a1610;
+}
+
+.goal-item__button {
+  padding: 10px 20px;
+  background-color: #007aff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  margin-right: 10px; 
+}
+
+.goal-item__button:hover {
+  background-color: #005bb5;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.goal-item__button:active {
+  background-color: #004494;
+}
+
+.goal-item__delete-button {
+  background-color: #ff3b30;
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  margin-right: 10px; 
+}
+
+.goal-item__delete-button:hover {
+  background-color: #bd1b13;
+}
+
+.goal-item__delete-button:active {
+  background-color: #9a1610;
+}
+
+.goal-item__actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }

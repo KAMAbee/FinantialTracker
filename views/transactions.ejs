@@ -31,52 +31,73 @@
   </header>
 
   <main class="main">
-    <form action="/transactions/addTransactions" method="POST" class="main__form">
-      <div class="main__form-wrap">
-        <label for="name" class="main__form-label">Name</label>
-        <input type="text" id="name" class="main__form-input" name="name" placeholder="Name" required>
-      </div>
+    <section class="transaction-section">
+      <h2>Add Transaction</h2>
+      <form action="/transactions/addTransactions" method="POST" class="main__form">
+        <div class="main__form-wrap">
+          <label for="name" class="main__form-label">Name</label>
+          <input type="text" id="name" class="main__form-input" name="name" placeholder="Name" required>
+        </div>
 
-      <div class="main__form-wrap">
-        <label for="amount" class="main__form-label">Amount</label>
-        <input type="number" id="amount" class="main__form-input" name="amount" placeholder="Amount" required>
-      </div>
+        <div class="main__form-wrap">
+          <label for="amount" class="main__form-label">Amount</label>
+          <input type="number" id="amount" class="main__form-input" name="amount" placeholder="Amount" required>
+        </div>
 
-      <div class="main__form-wrap">
-        <label for="category" class="main__form-label">Category</label>
-        <select id="category" class="main__form-select" name="category" required>
-          <% categories.forEach(category => { %>
-          <option value="<%= category.name %>"><%= category.name %></option>
-          <% }) %>
-        </select>
-      </div>
+        <div class="main__form-wrap">
+          <label for="category" class="main__form-label">Category</label>
+          <select id="category" class="main__form-select" name="category" required>
+            <% categories.forEach(category => { %>
+            <option value="<%= category.name %>"><%= category.name %></option>
+            <% }) %>
+          </select>
+        </div>
 
-      <button class="main__form-delete">Delete category</button>
-      <div class="main__form-wrap">
-        <label for="type" class="main__form-label">Type</label>
-        <select id="type" class="main__form-select" name="type" required>
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
-        </select>
-      </div>
+        <div class="main__form-wrap">
+          <label for="type" class="main__form-label">Type</label>
+          <select id="type" class="main__form-select" name="type" required>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+        </div>
 
-      <% if (message) { %>
-      <div class="main__form-error">
-        <%= message %>
-      </div>
-      <% } %>
+        <% if (message) { %>
+        <div class="main__form-error">
+          <%= message %>
+        </div>
+        <% } %>
 
-      <button type="submit" class="main__form-submit">Add Transaction</button>
-    </form>
+        <button type="submit" class="main__form-submit">Add Transaction</button>
+      </form>
+    </section>
 
-    <form id="addCategoryForm" action="/transactions/addCategory" method="POST" class="main__form">
-      <div class="main__form-wrap">
-        <label for="newCategory" class="main__form-label">Add New Category</label>
-        <input type="text" id="newCategory" class="main__form-input" name="categoryName" placeholder="Category Name" required>
-      </div>
+    <section class="category-section">
+      <h2>Add Category</h2>
+      <form id="addCategoryForm" action="/transactions/addCategory" method="POST" class="main__form">
+        <div class="main__form-wrap">
+          <label for="newCategory" class="main__form-label">New Category Name</label>
+          <input type="text" id="newCategory" class="main__form-input" name="categoryName" placeholder="Category Name" required>
+        </div>
 
-      <button type="submit" class="main__form-submit">Add Category</button>
-    </form>
+        <button type="submit" class="main__form-submit">Add Category</button>
+      </form>
+    </section>
+
+    <section class="edit-category-section">
+      <h2>Edit Category</h2>
+      <form id="editCategoryForm" class="main__form">
+        <div class="main__form-wrap">
+          <label for="editCategorySelect" class="main__form-label">Select Category</label>
+          <select id="editCategorySelect" class="main__form-select" name="category">
+            <% categories.forEach(category => { %>
+            <option value="<%= category.name %>"><%= category.name %></option>
+            <% }) %>
+          </select>
+        </div>
+    
+        <button type="button" class="main__form-submit" id="editCategoryButton" onclick="openEditCategoryModal()">Edit Category</button>
+      </form>
+    </section>
 
     <section class="transactions">
       <h2>All Transactions</h2>
@@ -104,37 +125,36 @@
 
       <div class="transactions__list">
         <% transactions.forEach(transaction => { %>
-        <div class="transaction-item">
-          <h3 class="transaction-item__name"><%= transaction.name %></h3>
-          <p class="transaction-item__amount">
-            <% if (transaction.type == "income") { %>
-            <span class="income">+<%= transaction.amount %></span>
-            <% } else { %>
-            <span class="expense">-<%= transaction.amount %></span>
-            <% } %>
-          </p>
-          <p class="transaction-item__category">Category: <%= transaction.category %></p>
-          <p class="transaction-item__date">Date: <%= transaction.createdAt %></p>
-
-          <form action="/transactions/deleteTransaction" method="POST">
-            <input type="hidden" name="transactionId" value="<%= transaction._id %>">
-            <button type="submit" class="transaction-item__delete-button">✖️</button>
-          </form>
-
-          <form action="#" method="POST" class="editTransactionForm">
-            <input type="hidden" name="transactionId" value="<%= transaction._id %>">
-            <button type="button" class="transactions__edit" data-id="<%= transaction._id %>" data-name="<%= transaction.name %>" data-amount="<%= transaction.amount %>" data-category="<%= transaction.category %>" data-type="<%= transaction.type %>">✏️</button>
-          </form>
-
-        </div>
+          <div class="transaction-item">
+            <h3 class="transaction-item__name"><%= transaction.name %></h3>
+            <p class="transaction-item__amount">
+              <% if (transaction.type == "income") { %>
+              <span class="income">+<%= transaction.amount %></span>
+              <% } else { %>
+              <span class="expense">-<%= transaction.amount %></span>
+              <% } %>
+            </p>
+            <p class="transaction-item__category">Category: <%= transaction.category %></p>
+            <p class="transaction-item__date">Date: <%= transaction.createdAt %></p>
+          
+            <div class="transaction-item__actions">
+              <button class="transaction-item__button" onclick="openEditTransactionModal('<%= transaction._id %>', '<%= transaction.name %>', '<%= transaction.amount %>', '<%= transaction.category %>', '<%= transaction.type %>')">Edit</button>
+              
+              <form action="/transactions/deleteTransaction" method="POST">
+                <input type="hidden" name="transactionId" value="<%= transaction._id %>">
+                <button type="submit" class="transaction-item__button transaction-item__delete-button">Delete</button>
+              </form>
+            </div>
+          </div>
+          
         <% }) %>
         <div class="pagination">
           <% if (currentPage > 1) { %>
             <a href="?page=<%= currentPage - 1 %>&limit=5" class="pagination__prev">⬅️</a>
           <% } %>
-        
+
           <span>Page <%= currentPage %> / <%= totalPages %></span>
-        
+
           <% if (currentPage < totalPages) { %>
             <a href="?page=<%= currentPage + 1 %>&limit=5" class="pagination__next">➡️</a>
           <% } %>
@@ -142,32 +162,49 @@
       </div>
     </section>
 
-    <div id="editModal" class="modal">
+    <!-- Edit Category Modal -->
+    <div id="editCategoryModal" class="modal">
       <div class="modal-content">
-        <span class="close">✖️</span>
+        <span class="close" onclick="closeModal('editCategoryModal')">✖️</span>
+        <h2>Edit Category</h2>
+        <form action="/transactions/updateCategory" method="POST" id="editCategoryForm">
+          <input type="hidden" id="editCategoryId" name="categoryId">
+          <label for="editCategoryName">Category Name</label>
+          <input type="text" id="editCategoryName" name="categoryName" required>
+
+          <button type="submit">Update Category</button>
+          <button type="submit" formaction="/transactions/deleteCategory" class="main__form-delete">Delete Category</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Edit Transaction Modal -->
+    <div id="editTransactionModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('editTransactionModal')">✖️</span>
         <h2>Edit Transaction</h2>
-        <form action="/transactions/updateTransaction" method="POST" id="editTransactionForm">
+        <form action="/transactions/updateTransaction" method="POST">
           <input type="hidden" id="editTransactionId" name="transactionId">
-          <label for="editName">Name</label>
-          <input type="text" id="editName" name="name" required>
+          <label for="editTransactionName">Transaction Name</label>
+          <input type="text" id="editTransactionName" name="name" required>
 
-          <label for="editAmount">Amount</label>
-          <input type="number" id="editAmount" name="amount" required>
+          <label for="editTransactionAmount">Amount</label>
+          <input type="number" id="editTransactionAmount" name="amount" required>
 
-          <label for="editCategory">Category</label>
-          <select id="editCategory" name="category">
+          <label for="editTransactionCategory">Category</label>
+          <select id="editTransactionCategory" name="category" required>
             <% categories.forEach(category => { %>
             <option value="<%= category.name %>"><%= category.name %></option>
             <% }) %>
           </select>
 
-          <label for="editType">Type</label>
-          <select id="editType" name="type">
+          <label for="editTransactionType">Type</label>
+          <select id="editTransactionType" name="type" required>
             <option value="income">Income</option>
             <option value="expense">Expense</option>
           </select>
 
-          <button type="submit">Update</button>
+          <button type="submit">Update Transaction</button>
         </form>
       </div>
     </div>
@@ -175,31 +212,24 @@
   </main>
 
   <script>
-    document.querySelectorAll('.transactions__edit').forEach(button => {
-      button.addEventListener('click', () => {
-        document.getElementById('editTransactionId').value = button.dataset.id;
-        document.getElementById('editName').value = button.dataset.name;
-        document.getElementById('editAmount').value = button.dataset.amount;
-        document.getElementById('editCategory').value = button.dataset.category;
-        document.getElementById('editType').value = button.dataset.type;
-        document.getElementById('editModal').style.display = "block";
-      });
-    });
+    // Open modal function
+    function openEditTransactionModal(id, name, amount, category, type) {
+      document.getElementById('editTransactionId').value = id;
+      document.getElementById('editTransactionName').value = name;
+      document.getElementById('editTransactionAmount').value = amount;
+      document.getElementById('editTransactionCategory').value = category;
+      document.getElementById('editTransactionType').value = type;
+      document.getElementById('editTransactionModal').style.display = "block";
+    }
 
-    document.querySelector('.close').addEventListener('click', () => {
-      document.getElementById('editModal').style.display = "none";
-    });
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = "none";
+    }
 
-    window.onclick = (event) => {
-      if (event.target == document.getElementById('editModal')) {
-        document.getElementById('editModal').style.display = "none";
-      }
-    };
-
-    
+    // Handle adding category via form
     document.getElementById('addCategoryForm').addEventListener('submit', async (event) => {
       event.preventDefault();
-      
+
       const form = event.target;
       const formData = new FormData(form);
       const categoryName = formData.get('categoryName');
@@ -214,13 +244,26 @@
 
       const result = await response.json();
 
-      if (!result.success) {
-        alert(result.message);  
+      if (result.success) {
+        location.reload();  // Refresh page to update category list
       } else {
-        window.location.reload();  
+        alert(result.message || 'Error adding category');
       }
     });
+    function openEditCategoryModal() {
+    const selectedCategory = document.getElementById('editCategorySelect').value;
+
+    document.getElementById('editCategoryName').value = selectedCategory;
+
+    document.getElementById('editCategoryModal').style.display = "block";
+  }
+
+  function closeModal(modalId) {
+    document.getElementById(modalId).style.display = "none";
+  }
+    
   </script>
+
 </body>
 
 </html>
