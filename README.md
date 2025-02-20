@@ -65,8 +65,9 @@ node server.js
 
 ## API documentation
 
-####Overview
-This API allows users to manage their financial transactions, goals, and user roles. It includes endpoints for user registration, login, transaction management, goal management, and admin functionalities.
+**Overview**  
+This API allows users to manage their financial transactions, goals, and user roles.  
+It includes endpoints for user registration, login, transaction management, goal management, and admin functionalities.
 
 ### Authentication
 
