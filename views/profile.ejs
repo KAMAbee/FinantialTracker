@@ -58,6 +58,11 @@
         <label for="password" class="main__form-label">Password (optional)</label>
         <input type="password" id="password" class="main__form-input" name="password" placeholder="Password (optional)" minlength="3" readonly>
       </div>
+      <% if (message) { %>
+        <div class="main__form-error">
+          <%= message %>
+        </div>
+        <% } %>
       <div class="main__form-functions">
         <button type="button" class="main__form-functions-cancel">Cancel</button>
         <button type="submit" class="main__form-functions-save">Save</button>

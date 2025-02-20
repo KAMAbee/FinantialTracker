@@ -134,9 +134,23 @@
       <div class="transactions__list">
         <% transactions.forEach(transaction=> { %>
           <div class="transaction-item">
-            <h3 class="transaction-item__name">
-              <%= transaction.name %>
-            </h3>
+
+            <div class="transactions__list-wrap">
+              <h3 class="transaction-item__name">
+                <%= transaction.name %>
+              </h3>
+              <div class="transaction-item__actions">
+                <button class="transaction-item__button"
+                  onclick="openEditTransactionModal('<%= transaction._id %>', '<%= transaction.name %>', '<%= transaction.amount %>', '<%= transaction.category %>', '<%= transaction.type %>')">Edit</button>
+
+                <form action="/transactions/deleteTransaction" method="POST">
+                  <input type="hidden" name="transactionId" value="<%= transaction._id %>">
+                  <button type="submit" class="transaction-item__button transaction-item__delete-button">Delete</button>
+                </form>
+              </div>
+            </div>
+
+
             <p class="transaction-item__amount">
               <% if (transaction.type=="income" ) { %>
                 <span class="income">+<%= transaction.amount %></span>
@@ -148,16 +162,6 @@
             </p>
             <p class="transaction-item__date">Date: <%= transaction.createdAt %>
             </p>
-
-            <div class="transaction-item__actions">
-              <button class="transaction-item__button"
-                onclick="openEditTransactionModal('<%= transaction._id %>', '<%= transaction.name %>', '<%= transaction.amount %>', '<%= transaction.category %>', '<%= transaction.type %>')">Edit</button>
-
-              <form action="/transactions/deleteTransaction" method="POST">
-                <input type="hidden" name="transactionId" value="<%= transaction._id %>">
-                <button type="submit" class="transaction-item__button transaction-item__delete-button">Delete</button>
-              </form>
-            </div>
           </div>
 
           <% }) %>

@@ -1,125 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Goals</title>
-    <link rel="stylesheet" href="goals.css" />
-  </head>
 
-  <body>
-    <nav class="navbar">
-      <ul class="navbar__list">
-        <li class="navbar__item">
-          <a href="/home" class="navbar__link">Home</a>
-        </li>
-        <li class="navbar__item">
-          <a href="/transactions" class="navbar__link">Transactions</a>
-        </li>
-        <li class="navbar__item">
-          <a href="/goals" class="navbar__link navbar__link--active">Goals</a>
-        </li>
-        <li class="navbar__item">
-          <a href="/profile" class="navbar__link">Profile</a>
-        </li>
-      </ul>
-    </nav>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Goals</title>
+  <link rel="stylesheet" href="goals.css" />
+</head>
 
-    <header class="header">
-      <h1 class="header__title">Goals</h1>
-    </header>
+<body>
+  <nav class="navbar">
+    <ul class="navbar__list">
+      <li class="navbar__item">
+        <a href="/home" class="navbar__link">Home</a>
+      </li>
+      <li class="navbar__item">
+        <a href="/transactions" class="navbar__link">Transactions</a>
+      </li>
+      <li class="navbar__item">
+        <a href="/goals" class="navbar__link navbar__link--active">Goals</a>
+      </li>
+      <li class="navbar__item">
+        <a href="/profile" class="navbar__link">Profile</a>
+      </li>
+    </ul>
+  </nav>
 
-    <main class="main">
-      <div class="main__form">
-        <h2>Add a Goal</h2>
-        <form action="/goals/addGoal" method="POST" class="main__form">
-          <div class="main__form-wrap">
-            <label for="name" class="main__form-label">Goal Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              placeholder="Goal name"
-              required
-              class="main__form-input"
-            />
-          </div>
-          <div class="main__form-wrap">
-            <label for="description" class="main__form-label"
-              >Description</label
-            >
-            <input
-              type="text"
-              id="description"
-              name="description"
-              placeholder="Description for your goal"
-              required
-              class="main__form-input"
-            />
-          </div>
-          <div class="main__form-wrap">
-            <label for="goalAmount" class="main__form-label">Goal Amount</label>
-            <input
-              type="text"
-              id="goalAmount"
-              name="goalAmount"
-              placeholder="Amount you want to save"
-              required
-              class="main__form-input"
-            />
-          </div>
-          <div class="main__form-wrap">
-            <label for="deadline" class="main__form-label">Deadline</label>
-            <input
-              type="date"
-              id="deadline"
-              name="deadline"
-              required
-              class="main__form-input deadline"
-            />
-          </div>
-          <button type="submit" class="main__form-submit">Save Goal</button>
-        </form>
+  <header class="header">
+    <h1 class="header__title">Goals</h1>
+  </header>
 
-        <h2>Your Goals</h2>
-        <div class="goals__list">
-          <% goals.forEach(function(goal) { %>
-            <div class="goal-item <%= goal.currentSaved >= goal.goalAmount ? 'goal-item--completed' : '' %>">
-              <h3><%= goal.name %></h3>
-          
-              <p><%= goal.description %></p>
-              <p>Current Saved: <%= goal.currentSaved %> / <%= goal.goalAmount %></p>
-              <p>Deadline: <%= goal.deadline %></p>
-          
-              <form action="/goals/addMoney" method="POST" class="goal-item__add-money-form">
-                <input type="hidden" name="goalId" value="<%= goal._id %>" />
-                <label for="amount" class="goal-item__add-money-label">Add Money:</label>
-                <input
-                  type="number"
-                  name="amount"
-                  min="0"
-                  placeholder="Amount to add"
-                  required
-                  class="goal-item__add-money-input"
-                />
-                <button type="submit" class="goal-item__add-money-button">
-                  Add Money
-                </button>
-              </form>
-          
+  <main class="main">
+    <div class="main__form">
+      <h2>Add a Goal</h2>
+      <form action="/goals/addGoal" method="POST" class="main__form">
+        <div class="main__form-wrap">
+          <label for="name" class="main__form-label">Goal Name</label>
+          <input type="text" id="name" name="name" placeholder="Goal name" required class="main__form-input" />
+        </div>
+        <div class="main__form-wrap">
+          <label for="description" class="main__form-label">Description</label>
+          <input type="text" id="description" name="description" placeholder="Description for your goal" required
+            class="main__form-input" />
+        </div>
+        <div class="main__form-wrap">
+          <label for="goalAmount" class="main__form-label">Goal Amount</label>
+          <input type="text" id="goalAmount" name="goalAmount" placeholder="Amount you want to save" required
+            class="main__form-input" />
+        </div>
+        <div class="main__form-wrap">
+          <label for="deadline" class="main__form-label">Deadline</label>
+          <input type="date" id="deadline" name="deadline" required class="main__form-input deadline" />
+        </div>
+        <button type="submit" class="main__form-submit">Save Goal</button>
+      </form>
+
+      <h2>Your Goals</h2>
+      <div class="goals__list">
+        <% goals.forEach(function(goal) { %>
+          <div class="goal-item <%= goal.currentSaved >= goal.goalAmount ? 'goal-item--completed' : '' %>">
+            <div class="goals__list-wrap">
+              <h3>
+                <%= goal.name %>
+              </h3>
+
               <div class="goal-item__actions">
 
                 <form action="#" method="POST" class="editGoalForm">
                   <input type="hidden" name="goalId" value="<%= goal._id %>" />
-                  <button
-                    type="button"
-                    class="goal-item__button goal__edit"
-                    data-id="<%= goal._id %>"
-                    data-name="<%= goal.name %>"
-                    data-amount="<%= goal.goalAmount %>"
-                    data-description="<%= goal.description %>"
-                    data-deadline="<%= goal.deadline %>"
-                  >
+                  <button type="button" class="goal-item__button goal__edit" data-id="<%= goal._id %>"
+                    data-name="<%= goal.name %>" data-amount="<%= goal.goalAmount %>"
+                    data-description="<%= goal.description %>" data-deadline="<%= goal.deadline %>">
                     Edit
                   </button>
                 </form>
@@ -131,93 +82,98 @@
 
               </div>
             </div>
-          <% }) %>          
-          
+            <p>
+              <%= goal.description %>
+            </p>
+            <p>Current Saved: <%= goal.currentSaved %> / <%= goal.goalAmount %>
+            </p>
+            <p>Deadline: <%= goal.deadline %>
+            </p>
 
-          <div class="pagination">
-            <% if (currentPage > 1) { %>
-            <a
-              href="?page=<%= currentPage - 1 %>&limit=5"
-              class="pagination__prev"
-              >⬅️</a
-            >
-            <% } %>
-
-            <span>Page <%= currentPage %> / <%= totalPages %></span>
-
-            <% if (currentPage < totalPages) { %>
-            <a
-              href="?page=<%= currentPage + 1 %>&limit=5"
-              class="pagination__next"
-              >➡️</a
-            >
-            <% } %>
+            <form action="/goals/addMoney" method="POST" class="goal-item__add-money-form">
+              <input type="hidden" name="goalId" value="<%= goal._id %>" />
+              <label for="amount" class="goal-item__add-money-label">Add Money:</label>
+              <input type="number" name="amount" min="0" placeholder="Amount" required
+                class="goal-item__add-money-input" />
+              <button type="submit" class="goal-item__add-money-button">
+                Add Money
+              </button>
+            </form>
           </div>
-        </div>
+          <% }) %>
+
+
+            <div class="pagination">
+              <% if (currentPage> 1) { %>
+                <a href="?page=<%= currentPage - 1 %>&limit=5" class="pagination__prev">⬅️</a>
+                <% } %>
+
+                  <span>Page <%= currentPage %> / <%= totalPages %></span>
+
+                  <% if (currentPage < totalPages) { %>
+                    <a href="?page=<%= currentPage + 1 %>&limit=5" class="pagination__next">➡️</a>
+                    <% } %>
+            </div>
       </div>
+    </div>
 
-      <div id="editModal" class="modal">
-        <div class="modal-content">
-          <span class="close">✖️</span>
-          <h2>Edit Goal</h2>
-          <form action="/goals/updateGoal" id="editGoalForm" method="POST">
-            <input type="hidden" id="editGoalId" name="goalId" />
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <span class="close">✖️</span>
+        <h2>Edit Goal</h2>
+        <form action="/goals/updateGoal" id="editGoalForm" method="POST">
+          <input type="hidden" id="editGoalId" name="goalId" />
 
-            <label for="editName">Name</label>
-            <input type="text" id="editName" name="name" required />
+          <label for="editName">Name</label>
+          <input type="text" id="editName" name="name" required />
 
-            <label for="editAmount">Goal Amount</label>
-            <input type="number" id="editAmount" name="goalAmount" required />
+          <label for="editAmount">Goal Amount</label>
+          <input type="number" id="editAmount" name="goalAmount" required />
 
-            <label for="editDescription">Description</label>
-            <input type="text" id="editDescription" name="description" required />
+          <label for="editDescription">Description</label>
+          <input type="text" id="editDescription" name="description" required />
 
-            <label for="editDeadline">Deadline</label>
-            <input
-              class="deadline"
-              type="date"
-              id="editDeadline"
-              name="deadline"
-              required
-            />
+          <label for="editDeadline">Deadline</label>
+          <input class="deadline" type="date" id="editDeadline" name="deadline" required />
 
-            <button type="submit">Update</button>
-          </form>
-        </div>
+          <button type="submit">Update</button>
+        </form>
       </div>
-    </main>
+    </div>
+  </main>
 
-    <script>
-      document.querySelectorAll(".goal__edit").forEach((button) => {
-        button.addEventListener("click", () => {
-          document.getElementById("editGoalId").value = button.dataset.id;
-          document.getElementById("editName").value = button.dataset.name;
-          document.getElementById("editAmount").value = button.dataset.amount;
-          document.getElementById("editDescription").value =
-            button.dataset.description;
-          document.getElementById("editDeadline").value =
-            button.dataset.deadline;
-          document.getElementById("editModal").style.display = "block";
-        });
+  <script>
+    document.querySelectorAll(".goal__edit").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.getElementById("editGoalId").value = button.dataset.id;
+        document.getElementById("editName").value = button.dataset.name;
+        document.getElementById("editAmount").value = button.dataset.amount;
+        document.getElementById("editDescription").value =
+          button.dataset.description;
+        document.getElementById("editDeadline").value =
+          button.dataset.deadline;
+        document.getElementById("editModal").style.display = "block";
       });
+    });
 
-      document.querySelector(".close").addEventListener("click", () => {
+    document.querySelector(".close").addEventListener("click", () => {
+      document.getElementById("editModal").style.display = "none";
+    });
+
+    window.onclick = (event) => {
+      if (event.target == document.getElementById("editModal")) {
         document.getElementById("editModal").style.display = "none";
-      });
+      }
+    };
 
-      window.onclick = (event) => {
-        if (event.target == document.getElementById("editModal")) {
-          document.getElementById("editModal").style.display = "none";
-        }
-      };
-
-      document.addEventListener("DOMContentLoaded", function () {
-        const deadlineInputs = document.querySelectorAll(".deadline");
-        const today = new Date().toISOString().split("T")[0];
-        deadlineInputs.forEach((deadlineInput) => {
-          deadlineInput.setAttribute("min", today);
-        });
+    document.addEventListener("DOMContentLoaded", function () {
+      const deadlineInputs = document.querySelectorAll(".deadline");
+      const today = new Date().toISOString().split("T")[0];
+      deadlineInputs.forEach((deadlineInput) => {
+        deadlineInput.setAttribute("min", today);
       });
-    </script>
-  </body>
+    });
+  </script>
+</body>
+
 </html>

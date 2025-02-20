@@ -146,12 +146,12 @@ h2 {
 
 
 .goals__list {
-  margin-top: 40px;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 15px;
+  margin-top: -10px;
 }
 
 .goal-item {
@@ -160,6 +160,7 @@ h2 {
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s;
+  width: 430px;
 }
 
 .goal-item:hover {
@@ -176,11 +177,10 @@ h2 {
 }
 
 .goal-item__add-money-button {
-  width: 50%;
-  height: 40px;
+  width: 150px;
+  height: 34px;
   border-radius: 10px;
   border: none;
-  margin-top: 10px;
   background-color: #007aff;
   color: #fff;
   font-size: 18px;
@@ -198,13 +198,14 @@ h2 {
 
 .goal-item__add-money-form {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
   gap: 10px;
 }
 
 .goal-item__add-money-input {
-  width: 90%;
-  height: 35px;
+  width: 140px;
+  height: 30px;
   border: 1px solid #ccc;
   border-radius: 10px;
   font-size: 16px;
@@ -407,5 +408,10 @@ h2 {
 .goal-item__actions {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+}
+
+.goals__list-wrap{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }

@@ -8,7 +8,7 @@ const { authenticateJWT, verifyRole } = require('../middleware/authMiddleware');
 // Get all users
 router.get('/', authenticateJWT, verifyRole, async (req, res) => {
     const page = parseInt(req.query.page) || 1;
-    const limit = 5;
+    const limit = 3;
     const users = await User.find({})
     .skip((page - 1) * limit)
     .limit(limit);

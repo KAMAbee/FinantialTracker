@@ -123,11 +123,7 @@ html, body {
 
 .pagination__prev:hover,
 .pagination__next:hover {
-    text-decoration: underline;
-}
-
-.pagination span {
-    font-size: 16px;
+    text-decoration: none;
 }
 
 .main__stats h2 {
