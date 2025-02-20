@@ -137,19 +137,6 @@ All endpoints require JWT authentication unless specified otherwise.
 - **Response:** Redirects to the transactions page.
 
 
-#### Add Category 
-- **URL:** `/transactions/addCategory`
-- **Method:** `POST`
-- **Description:** Adds a new category.
-- **Request Body:**
-```json
-{
-  "categoryName": "string"
-}
-```
-- **Response:** Redirects to the transactions page.
-
-
 #### Delete Transaction 
 - **URL:** `/transactions/deleteTransaction`
 - **Method:** `POST`
@@ -178,6 +165,45 @@ All endpoints require JWT authentication unless specified otherwise.
 }
 ```
 - **Response:** Redirects to the transactions page.
+
+#### Add Category
+- **URL:** `/transactions/addCategory`
+- **Method:** `POST`
+- **Description:** Adds a new category.
+- **Request Body:**
+```json
+{
+  "categoryName": "string"
+}
+```
+- **Response:** Redirects to the transactions page.
+
+
+#### Update Category
+- **URL:** `/transactions/updateCategory`
+- **Method:** `POST`
+- **Description:** Updates a category.
+- **Request Body:**
+```json
+{
+  "categoryId": "string",
+  "categoryName": "string"
+}
+```
+- **Response:** Redirects to the transactions page.
+
+#### Delete Category
+- **URL:** `/transactions/deleteCategory`
+- **Method:** `POST`
+- **Description:**  Deletes a category.
+- **Request Body:**
+```json
+{
+  "categoryId": "string",
+}
+```
+- **Response:** Redirects to the transactions page.
+
 
 
 ### Goal Routes

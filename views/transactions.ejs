@@ -47,9 +47,11 @@
         <div class="main__form-wrap">
           <label for="category" class="main__form-label">Category</label>
           <select id="category" class="main__form-select" name="category" required>
-            <% categories.forEach(category => { %>
-            <option value="<%= category.name %>"><%= category.name %></option>
-            <% }) %>
+            <% categories.forEach(category=> { %>
+              <option value="<%= category.name %>">
+                <%= category.name %>
+              </option>
+              <% }) %>
           </select>
         </div>
 
@@ -62,12 +64,12 @@
         </div>
 
         <% if (message) { %>
-        <div class="main__form-error">
-          <%= message %>
-        </div>
-        <% } %>
+          <div class="main__form-error">
+            <%= message %>
+          </div>
+          <% } %>
 
-        <button type="submit" class="main__form-submit">Add Transaction</button>
+            <button type="submit" class="main__form-submit">Add Transaction</button>
       </form>
     </section>
 
@@ -76,7 +78,8 @@
       <form id="addCategoryForm" action="/transactions/addCategory" method="POST" class="main__form">
         <div class="main__form-wrap">
           <label for="newCategory" class="main__form-label">New Category Name</label>
-          <input type="text" id="newCategory" class="main__form-input" name="categoryName" placeholder="Category Name" required>
+          <input type="text" id="newCategory" class="main__form-input" name="categoryName" placeholder="Category Name"
+            required>
         </div>
 
         <button type="submit" class="main__form-submit">Add Category</button>
@@ -89,13 +92,16 @@
         <div class="main__form-wrap">
           <label for="editCategorySelect" class="main__form-label">Select Category</label>
           <select id="editCategorySelect" class="main__form-select" name="category">
-            <% categories.forEach(category => { %>
-            <option value="<%= category.name %>"><%= category.name %></option>
-            <% }) %>
+            <% categories.forEach(category=> { %>
+              <option value="<%= category._id %>">
+                <%= category.name %>
+              </option>
+              <% }) %>
           </select>
         </div>
-    
-        <button type="button" class="main__form-submit" id="editCategoryButton" onclick="openEditCategoryModal()">Edit Category</button>
+
+        <button type="button" class="main__form-submit" id="editCategoryButton" onclick="openEditCategoryModal()">Edit
+          Category</button>
       </form>
     </section>
 
@@ -107,9 +113,11 @@
           <label for="categoryFilter" class="main__form-label">Filter by Category</label>
           <select id="categoryFilter" class="main__form-select" name="category">
             <option value="">All Categories</option>
-            <% categories.forEach(category => { %>
-            <option value="<%= category.name %>"><%= category.name %></option>
-            <% }) %>
+            <% categories.forEach(category=> { %>
+              <option value="<%= category.name %>">
+                <%= category.name %>
+              </option>
+              <% }) %>
           </select>
         </div>
         <div class="main__form-wrap">
@@ -124,41 +132,46 @@
       </form>
 
       <div class="transactions__list">
-        <% transactions.forEach(transaction => { %>
+        <% transactions.forEach(transaction=> { %>
           <div class="transaction-item">
-            <h3 class="transaction-item__name"><%= transaction.name %></h3>
+            <h3 class="transaction-item__name">
+              <%= transaction.name %>
+            </h3>
             <p class="transaction-item__amount">
-              <% if (transaction.type == "income") { %>
-              <span class="income">+<%= transaction.amount %></span>
-              <% } else { %>
-              <span class="expense">-<%= transaction.amount %></span>
-              <% } %>
+              <% if (transaction.type=="income" ) { %>
+                <span class="income">+<%= transaction.amount %></span>
+                <% } else { %>
+                  <span class="expense">-<%= transaction.amount %></span>
+                  <% } %>
             </p>
-            <p class="transaction-item__category">Category: <%= transaction.category %></p>
-            <p class="transaction-item__date">Date: <%= transaction.createdAt %></p>
-          
+            <p class="transaction-item__category">Category: <%= transaction.category %>
+            </p>
+            <p class="transaction-item__date">Date: <%= transaction.createdAt %>
+            </p>
+
             <div class="transaction-item__actions">
-              <button class="transaction-item__button" onclick="openEditTransactionModal('<%= transaction._id %>', '<%= transaction.name %>', '<%= transaction.amount %>', '<%= transaction.category %>', '<%= transaction.type %>')">Edit</button>
-              
+              <button class="transaction-item__button"
+                onclick="openEditTransactionModal('<%= transaction._id %>', '<%= transaction.name %>', '<%= transaction.amount %>', '<%= transaction.category %>', '<%= transaction.type %>')">Edit</button>
+
               <form action="/transactions/deleteTransaction" method="POST">
                 <input type="hidden" name="transactionId" value="<%= transaction._id %>">
                 <button type="submit" class="transaction-item__button transaction-item__delete-button">Delete</button>
               </form>
             </div>
           </div>
-          
-        <% }) %>
-        <div class="pagination">
-          <% if (currentPage > 1) { %>
-            <a href="?page=<%= currentPage - 1 %>&limit=5" class="pagination__prev">⬅️</a>
-          <% } %>
 
-          <span>Page <%= currentPage %> / <%= totalPages %></span>
+          <% }) %>
+            <div class="pagination">
+              <% if (currentPage> 1) { %>
+                <a href="?page=<%= currentPage - 1 %>&limit=5" class="pagination__prev">⬅️</a>
+                <% } %>
 
-          <% if (currentPage < totalPages) { %>
-            <a href="?page=<%= currentPage + 1 %>&limit=5" class="pagination__next">➡️</a>
-          <% } %>
-        </div>
+                  <span>Page <%= currentPage %> / <%= totalPages %></span>
+
+                  <% if (currentPage < totalPages) { %>
+                    <a href="?page=<%= currentPage + 1 %>&limit=5" class="pagination__next">➡️</a>
+                    <% } %>
+            </div>
       </div>
     </section>
 
@@ -167,13 +180,13 @@
       <div class="modal-content">
         <span class="close" onclick="closeModal('editCategoryModal')">✖️</span>
         <h2>Edit Category</h2>
-        <form action="/transactions/updateCategory" method="POST" id="editCategoryForm">
+        <form id="editCategoryForm">
           <input type="hidden" id="editCategoryId" name="categoryId">
           <label for="editCategoryName">Category Name</label>
           <input type="text" id="editCategoryName" name="categoryName" required>
 
-          <button type="submit">Update Category</button>
-          <button type="submit" formaction="/transactions/deleteCategory" class="main__form-delete">Delete Category</button>
+          <button type="button" onclick="updateCategory()">Update Category</button>
+          <button type="button" onclick="deleteCategory()" class="main__form-delete">Delete Category</button>
         </form>
       </div>
     </div>
@@ -193,9 +206,11 @@
 
           <label for="editTransactionCategory">Category</label>
           <select id="editTransactionCategory" name="category" required>
-            <% categories.forEach(category => { %>
-            <option value="<%= category.name %>"><%= category.name %></option>
-            <% }) %>
+            <% categories.forEach(category=> { %>
+              <option value="<%= category.name %>">
+                <%= category.name %>
+              </option>
+              <% }) %>
           </select>
 
           <label for="editTransactionType">Type</label>
@@ -222,11 +237,21 @@
       document.getElementById('editTransactionModal').style.display = "block";
     }
 
+    function openEditCategoryModal() {
+      const selectedCategoryId = document.getElementById('editCategorySelect').value;
+      const selectedCategoryName = document.getElementById('editCategorySelect').options[document.getElementById('editCategorySelect').selectedIndex].text;
+
+      document.getElementById('editCategoryId').value = selectedCategoryId;
+      document.getElementById('editCategoryName').value = selectedCategoryName;
+
+      document.getElementById('editCategoryModal').style.display = "block";
+    }
+
     function closeModal(modalId) {
       document.getElementById(modalId).style.display = "none";
     }
 
-    // Handle adding category via form
+    // Handle adding category
     document.getElementById('addCategoryForm').addEventListener('submit', async (event) => {
       event.preventDefault();
 
@@ -245,23 +270,54 @@
       const result = await response.json();
 
       if (result.success) {
-        location.reload();  // Refresh page to update category list
+        location.reload();
       } else {
         alert(result.message || 'Error adding category');
       }
     });
-    function openEditCategoryModal() {
-    const selectedCategory = document.getElementById('editCategorySelect').value;
 
-    document.getElementById('editCategoryName').value = selectedCategory;
+    // Handle updating category
+    async function updateCategory() {
+      const categoryId = document.getElementById('editCategoryId').value;
+      const categoryName = document.getElementById('editCategoryName').value;
 
-    document.getElementById('editCategoryModal').style.display = "block";
-  }
+      const response = await fetch('/transactions/updateCategory', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ categoryId, categoryName }),
+      });
 
-  function closeModal(modalId) {
-    document.getElementById(modalId).style.display = "none";
-  }
-    
+      const result = await response.json();
+
+      if (result.success) {
+        location.reload();
+      } else {
+        alert(result.message || 'Error updating category');
+      }
+    }
+
+    // Handle deleting category
+    async function deleteCategory() {
+      const categoryId = document.getElementById('editCategoryId').value;
+
+      const response = await fetch('/transactions/deleteCategory', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ categoryId }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        location.reload();
+      } else {
+        alert(result.message || 'Error deleting category');
+      }
+    }
   </script>
 
 </body>

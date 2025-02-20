@@ -56,38 +56,6 @@ router.post('/addTransactions', authenticateJWT, async (req, res) => {
     }
 });
 
-// Add category with check for existing category
-router.post('/addCategory', authenticateJWT, async (req, res) => {
-    try {
-        const { categoryName } = req.body;
-        const user = await User.findById(req.user.id);
-
-        
-        const existingCategory = user.categories.find(category => category.name.toLowerCase() === categoryName.toLowerCase());
-
-        if (existingCategory) {
-            
-            return res.json({ success: false, message: 'Category already exists' });
-        }
-
-        
-        const newCategory = {
-            userId: req.user.id,
-            name: categoryName,
-            isDefault: false
-        };
-
-        user.categories.push(newCategory);
-        await user.save();
-
-        res.json({ success: true });
-    } catch (err) {
-        res.status(500).json({ success: false, message: 'Error adding category' });
-    }
-});
-
-
-
 // Delete transaction
 router.post('/deleteTransaction', authenticateJWT, async (req, res) => {
     try {
@@ -107,6 +75,85 @@ router.post('/updateTransaction', authenticateJWT, async (req, res) => {
         res.redirect('/transactions');
     } catch (err) {
         res.status(500).json({ error: 'Error updating transaction' });
+    }
+});
+
+// Add category
+router.post('/addCategory', authenticateJWT, async (req, res) => {
+    try {
+        const { categoryName } = req.body;
+        const user = await User.findById(req.user.id);
+
+        const existingCategory = user.categories.find(category => category.name.toLowerCase() === categoryName.toLowerCase());
+
+        if (existingCategory) {
+            return res.json({ success: false, message: 'Category already exists' });
+        }
+        
+        const newCategory = {
+            userId: req.user.id,
+            name: categoryName,
+            isDefault: false
+        };
+
+        user.categories.push(newCategory);
+        await user.save();
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Error adding category' });
+    }
+});
+
+// Update category
+router.post('/updateCategory', authenticateJWT, async (req, res) => {
+    try {
+        const { categoryId, categoryName } = req.body;
+
+        const user = await User.findById(req.user.id);
+
+        const category = user.categories.id(categoryId);
+
+        if (!category) {
+            return res.json({ success: false, message: 'Category not found' });
+        }
+
+        if (category.isDefault) {
+            return res.json({ success: false, message: 'Default categories cannot be updated' });
+        }
+
+        category.name = categoryName;
+        await user.save();
+
+        res.json({ success: true, message: 'Category updated successfully' });
+    } catch (error) {
+        console.error('Error updating category:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+// Delete category
+router.post('/deleteCategory', authenticateJWT, async (req, res) => {
+    try {
+        const { categoryId } = req.body;
+        const user = await User.findById(req.user.id);
+        const category = user.categories.id(categoryId);
+
+        if (!category) {
+            return res.json({ success: false, message: 'Category not found' });
+        }
+
+        if (category.isDefault) {
+            return res.json({ success: false, message: 'Default categories cannot be deleted' });
+        }
+
+        user.categories.pull({ _id: categoryId });
+        await user.save();
+
+        res.json({ success: true, message: 'Category deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting category:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 });
 
