@@ -11,6 +11,7 @@
 
 ## Description
 **Financial Tracker** is a web application designed to help users manage their personal finances, set savings goals, and track progress. With this tool, you can easily monitor your spending, set financial goals, and track your savings over time.
+- Made by Kamil Akbarov and Mikhail Zherebtsov
 
 ## Key Features
 - 🏦 **Goal Management**: Create, update, and manage financial goals like saving for a vacation, buying a new gadget, or paying off debt.
