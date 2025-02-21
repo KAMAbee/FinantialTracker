@@ -4,6 +4,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const Joi = require('joi');
 require('dotenv').config();
 
 const app = express();
