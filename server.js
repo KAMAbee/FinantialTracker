@@ -37,7 +37,7 @@ app.use(session({
         mongoUrl: process.env.URI,
         collectionName: 'sessions'
     }),
-    cookie: { secure: false }
+    cookie: { secure: false,  maxAge: 10 * 60 * 1000 }
 }));
 
 // Routes
