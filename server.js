@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const Joi = require('joi');
 const errorHandler = require('./middleware/errorHandler');
+const MongoStore = require('connect-mongo');
 require('dotenv').config();
 
 const app = express();
@@ -27,10 +28,15 @@ mongoose.connect(process.env.URI, {
     console.error('Error connecting to MongoDB:', err);
 });
 
+// Session configuration
 app.use(session({
     secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: true,
+    store: MongoStore.create({
+        mongoUrl: process.env.URI,
+        collectionName: 'sessions'
+    }),
     cookie: { secure: false }
 }));
 
