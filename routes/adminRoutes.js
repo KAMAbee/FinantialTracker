@@ -6,86 +6,90 @@ const Goal = require('../models/Goal');
 const { authenticateJWT, verifyRole } = require('../middleware/authMiddleware');
 
 // Get all users
-router.get('/', authenticateJWT, verifyRole, async (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    const limit = 3;
-    const users = await User.find({})
-    .skip((page - 1) * limit)
-    .limit(limit);
+router.get('/', authenticateJWT, verifyRole, async (req, res, next) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 3;
+        const users = await User.find({})
+        .skip((page - 1) * limit)
+        .limit(limit);
 
-    // Get count of all users
-    const usersCountAggregate = await User.aggregate([
-        { $count: "count" }
-    ]);
-    const usersCount = usersCountAggregate[0].count;
+        // Get count of all users
+        const usersCountAggregate = await User.aggregate([
+            { $count: "count" }
+        ]);
+        const usersCount = usersCountAggregate[0].count;
 
-    // Get count of all transactions
-    const transactionsCountAggregate = await Transaction.aggregate([
-        { $count: "count" }
-    ]);
-    const transactionsCount = transactionsCountAggregate[0].count;
+        // Get count of all transactions
+        const transactionsCountAggregate = await Transaction.aggregate([
+            { $count: "count" }
+        ]);
+        const transactionsCount = transactionsCountAggregate[0].count;
 
-    // Get count of income and expense transactions
-    const incomeCountAggregate = await Transaction.aggregate([
-        { $match: { type: 'income' } },
-        { $count: "count" }
-    ]);
-    const expenseCountAggregate = await Transaction.aggregate([
-        { $match: { type: 'expense' } },
-        { $count: "count" }
-    ]);
+        // Get count of income and expense transactions
+        const incomeCountAggregate = await Transaction.aggregate([
+            { $match: { type: 'income' } },
+            { $count: "count" }
+        ]);
+        const expenseCountAggregate = await Transaction.aggregate([
+            { $match: { type: 'expense' } },
+            { $count: "count" }
+        ]);
 
-    const incomeCount = incomeCountAggregate.length > 0 ? incomeCountAggregate[0].count : 0;
-    const expenseCount = expenseCountAggregate.length > 0 ? expenseCountAggregate[0].count : 0;
+        const incomeCount = incomeCountAggregate.length > 0 ? incomeCountAggregate[0].count : 0;
+        const expenseCount = expenseCountAggregate.length > 0 ? expenseCountAggregate[0].count : 0;
 
 
-    // Get count of all goals
-    const goalsCountAggregate = await Goal.aggregate([
-        { $count: "count" },
-    ]);
-    const goalsCount = goalsCountAggregate[0].count;
+        // Get count of all goals
+        const goalsCountAggregate = await Goal.aggregate([
+            { $count: "count" },
+        ]);
+        const goalsCount = goalsCountAggregate[0].count;
 
-    // Get count of transactions for each user
-    const usersWithTransactionCount = await User.aggregate([
-        {
-            $lookup: {
-                from: Transaction.collection.name,
-                localField: "_id",
-                foreignField: "userId",
-                as: "transactions"
+        // Get count of transactions for each user
+        const usersWithTransactionCount = await User.aggregate([
+            {
+                $lookup: {
+                    from: Transaction.collection.name,
+                    localField: "_id",
+                    foreignField: "userId",
+                    as: "transactions"
+                }
+            },
+            {
+                $addFields: {
+                    transactionsCount: { $size: "$transactions" }
+                }
+            },
+            {
+                $project: {
+                    transactionsCount: 1
+                }
             }
-        },
-        {
-            $addFields: {
-                transactionsCount: { $size: "$transactions" }
-            }
-        },
-        {
-            $project: {
-                transactionsCount: 1
-            }
-        }
-    ]);
+        ]);
 
-    const totalPages = Math.ceil(usersCount / limit);
+        const totalPages = Math.ceil(usersCount / limit);
 
-    res.render('admin', {
-        users,
-        usersWithTransactionCount,
-        usersCount,
-        transactionsCount,
-        incomeCount,
-        expenseCount,
-        goalsCount, 
-        currentPage: page,
-        totalPages,
-        message: null
-    });
+        res.render('admin', {
+            users,
+            usersWithTransactionCount,
+            usersCount,
+            transactionsCount,
+            incomeCount,
+            expenseCount,
+            goalsCount, 
+            currentPage: page,
+            totalPages,
+            message: null
+        });
+    } catch (err) { 
+        next(err);
+    }
 });
 
 
 // Update user role
-router.post('/updateRole', authenticateJWT, verifyRole, async (req, res) => {
+router.post('/updateRole', authenticateJWT, verifyRole, async (req, res, next) => {
     try {
         const { userId, role } = req.body;
 
@@ -98,7 +102,7 @@ router.post('/updateRole', authenticateJWT, verifyRole, async (req, res) => {
         await user.save();
         res.redirect('/admin');
     } catch (err) {
-        return res.render('admin', { message: 'Error updating role' });
+        next(err);
     }
 });
 

@@ -5,7 +5,7 @@ const User = require('../models/User');
 const { authenticateJWT } = require('../middleware/authMiddleware');
 
 // Get all transactions
-router.get('/', authenticateJWT, async (req, res) => {
+router.get('/', authenticateJWT, async (req, res, next) => {
     try {
         const { category, type, page = 1, limit = 5 } = req.query;
         const user = await User.findById(req.user.id);
@@ -32,13 +32,13 @@ router.get('/', authenticateJWT, async (req, res) => {
             totalPages
         });
     } catch (err) {
-        res.status(500).json({ error: 'Error fetching transactions' });
+        next(err);    
     }
 });
 
 
 // Add transaction
-router.post('/addTransactions', authenticateJWT, async (req, res) => {
+router.post('/addTransactions', authenticateJWT, async (req, res, next) => {
     try {
         const { name, amount, category, type } = req.body;
 
@@ -53,34 +53,34 @@ router.post('/addTransactions', authenticateJWT, async (req, res) => {
         await newTransaction.save();
         res.redirect('/transactions');
     } catch (err) {
-        res.status(500).json({ error: 'Error creating transaction' });
+        next(err);    
     }
 });
 
 // Delete transaction
-router.post('/deleteTransaction', authenticateJWT, async (req, res) => {
+router.post('/deleteTransaction', authenticateJWT, async (req, res, next) => {
     try {
         const { transactionId } = req.body;
         await Transaction.findByIdAndDelete(transactionId);
         res.redirect('/transactions');
     } catch (err) {
-        res.status(500).json({ error: 'Error deleting transaction' });
+        next(err);    
     }
 });
 
 // Update transaction
-router.post('/updateTransaction', authenticateJWT, async (req, res) => {
+router.post('/updateTransaction', authenticateJWT, async (req, res, next) => {
     try {
         const { transactionId, name, amount, category, type } = req.body;
         await Transaction.findByIdAndUpdate(transactionId, { name, amount, category, type });
         res.redirect('/transactions');
     } catch (err) {
-        res.status(500).json({ error: 'Error updating transaction' });
+        next(err);    
     }
 });
 
 // Add category
-router.post('/addCategory', authenticateJWT, async (req, res) => {
+router.post('/addCategory', authenticateJWT, async (req, res, next) => {
     try {
         const { categoryName } = req.body;
         const user = await User.findById(req.user.id);
@@ -102,12 +102,12 @@ router.post('/addCategory', authenticateJWT, async (req, res) => {
 
         res.json({ success: true });
     } catch (err) {
-        res.status(500).json({ success: false, message: 'Error adding category' });
+        next(err);    
     }
 });
 
 // Update category
-router.post('/updateCategory', authenticateJWT, async (req, res) => {
+router.post('/updateCategory', authenticateJWT, async (req, res, next) => {
     try {
         const { categoryId, categoryName } = req.body;
 
@@ -129,12 +129,12 @@ router.post('/updateCategory', authenticateJWT, async (req, res) => {
         res.json({ success: true, message: 'Category updated successfully' });
     } catch (error) {
         console.error('Error updating category:', error);
-        res.status(500).json({ success: false, message: 'Server error' });
+        next(err);    
     }
 });
 
 // Delete category
-router.post('/deleteCategory', authenticateJWT, async (req, res) => {
+router.post('/deleteCategory', authenticateJWT, async (req, res, next) => {
     try {
         const { categoryId } = req.body;
         const user = await User.findById(req.user.id);
@@ -154,7 +154,7 @@ router.post('/deleteCategory', authenticateJWT, async (req, res) => {
         res.json({ success: true, message: 'Category deleted successfully' });
     } catch (error) {
         console.error('Error deleting category:', error);
-        res.status(500).json({ success: false, message: 'Server error' });
+        next(err);    
     }
 });
 

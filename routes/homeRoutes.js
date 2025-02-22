@@ -5,9 +5,8 @@ const mongoose = require('mongoose');
 const { authenticateJWT } = require('../middleware/authMiddleware');
 
 // Get sum of transactions on homepage
-router.get('/', authenticateJWT, async (req, res) => {
+router.get('/', authenticateJWT, async (req, res, next) => {
     try {
-
         const result = await Transaction.aggregate([
             {
                 $match: { userId: new mongoose.Types.ObjectId(req.user.id) }
@@ -32,8 +31,7 @@ router.get('/', authenticateJWT, async (req, res) => {
             totalExpense
         });
     } catch (err) {
-        console.log(err)
-        res.status(500).json({ error: 'Error rendering Homepage' });
+        next(err)
     }
 });
 

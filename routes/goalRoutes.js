@@ -5,7 +5,7 @@ const Goal = require('../models/Goal');
 const { authenticateJWT } = require('../middleware/authMiddleware');
 
 // Get all goals
-router.get('/', authenticateJWT, async (req, res) => {
+router.get('/', authenticateJWT, async (req, res, next) => {
     try {
         const { page = 1, limit = 5 } = req.query;
         const userId = req.user.id;
@@ -24,12 +24,12 @@ router.get('/', authenticateJWT, async (req, res) => {
             totalPages
         });
     } catch (err) {
-        res.status(500).json({ error: 'Error fetching goals' });
+        next(err);
     }
 });
 
 // Add a new goal
-router.post('/addGoal', authenticateJWT, async (req, res) => {
+router.post('/addGoal', authenticateJWT, async (req, res, next) => {
     try {
         const { name, description, goalAmount, deadline } = req.body;
 
@@ -44,12 +44,12 @@ router.post('/addGoal', authenticateJWT, async (req, res) => {
         await newGoal.save();
         res.redirect('/goals');
     } catch (err) {
-        res.status(500).json({ error: 'Error creating goal' });
+        next(err);
     }
 });
 
 // Add money to a goal
-router.post('/addMoney', authenticateJWT, async (req, res) => {
+router.post('/addMoney', authenticateJWT, async (req, res, next) => {
     try {
         const { goalId, amount } = req.body;
 
@@ -71,29 +71,29 @@ router.post('/addMoney', authenticateJWT, async (req, res) => {
         await goal.save();
         res.redirect('/goals');
     } catch (err) {
-        res.status(500).json({ error: 'Error adding money to goal' });
+        next(err);
     }
 });
 
 // Delete goal
-router.post('/deleteGoal', authenticateJWT, async (req, res) => {
+router.post('/deleteGoal', authenticateJWT, async (req, res, next) => {
     try {
         const { goalId } = req.body;
         await Goal.findByIdAndDelete(goalId);
         res.redirect('/goals');
     } catch (err) {
-        res.status(500).json({ error: 'Error deleting goal' });
+        next(err);
     }
 });
 
 // Update goal
-router.post('/updateGoal', authenticateJWT, async (req, res) => {
+router.post('/updateGoal', authenticateJWT, async (req, res, next) => {
     try {
         const { goalId, name, amount, description, deadline} = req.body;
         await Goal.findByIdAndUpdate(goalId, { name, amount, description, deadline });
         res.redirect('/goals');
     } catch (err) {
-        res.status(500).json({ error: 'Error updating goal' });
+        next(err);
 
     }
 });

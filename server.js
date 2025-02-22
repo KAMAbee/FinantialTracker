@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const Joi = require('joi');
+const errorHandler = require('./middleware/errorHandler');
 require('dotenv').config();
 
 const app = express();
@@ -48,6 +49,8 @@ app.use('/admin', adminRoutes);
 app.use((req, res) => {
     res.redirect('/home');
 });
+
+app.use(errorHandler);
 
 // Server creation
 const PORT = process.env.PORT || 3000;

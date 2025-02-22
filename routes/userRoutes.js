@@ -27,11 +27,11 @@ const redirectIfAuthenticated = (req, res, next) => {
 };
 
 // Registration
-router.get("/registration", redirectIfAuthenticated, (req, res) => {
+router.get("/registration", redirectIfAuthenticated, (req, res, next) => {
   res.render("registration", { message: null });
 });
 
-router.post("/registration", async (req, res) => {
+router.post("/registration", async (req, res, next) => {
   const { error } = registerValidation(req.body);
   if (error)
     return res.render("registration", { message: error.details[0].message });
@@ -65,16 +65,16 @@ router.post("/registration", async (req, res) => {
 
     res.redirect("/login");
   } catch (err) {
-    res.status(500).send("Error creating user");
+    next(err);
   }
 });
 
 // Login
-router.get("/login", redirectIfAuthenticated, (req, res) => {
+router.get("/login", redirectIfAuthenticated, (req, res, next) => {
   res.render("login", { message: null });
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", async (req, res, next) => {
   const { error } = loginValidation(req.body);
   if (error) return res.render("login", { message: error.details[0].message });
 
@@ -106,17 +106,17 @@ router.post("/login", async (req, res) => {
     res.cookie("token", token, { httpOnly: true });
     res.redirect("/home");
   } catch (err) {
-    res.status(500).send("Login error");
+    next(err);
   }
 });
 
 // Profile
-router.get("/profile", authenticateJWT, (req, res) => {
+router.get("/profile", authenticateJWT, (req, res, next) => {
   res.render("profile", { user: req.user, message: null });
 });
 
 // Profile update
-router.post("/update_user", authenticateJWT, async (req, res) => {
+router.post("/update_user", authenticateJWT, async (req, res, next) => {
   const { error } = updateUserValidation(req.body);
   if (error)
     return res.render("profile", {
@@ -156,24 +156,23 @@ router.post("/update_user", authenticateJWT, async (req, res) => {
 
     res.redirect("/profile");
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Update error");
+    next(err);
   }
 });
 
 // Profile delete
-router.post("/delete_user", authenticateJWT, async (req, res) => {
+router.post("/delete_user", authenticateJWT, async (req, res, next) => {
   try {
     await User.findByIdAndDelete(req.user.id);
     res.clearCookie("token");
     res.redirect("/login");
   } catch (err) {
-    res.status(500).send("Delete error");
+    next(err);
   }
 });
 
 // Log out
-router.get("/logout", (req, res) => {
+router.get("/logout", (req, res, next) => {
   res.clearCookie("token");
   res.redirect("/login");
 });
@@ -190,11 +189,11 @@ const transporter = nodemailer.createTransport({
 });
 
 // Reset Password
-router.get("/reset", (req, res) => {
+router.get("/reset", (req, res, next) => {
   res.render("reset", { message: null, messageType: null });
 });
 
-router.post("/reset", async (req, res) => {
+router.post("/reset", async (req, res, next) => {
   try {
     const { email } = req.body;
 
@@ -231,13 +230,12 @@ router.post("/reset", async (req, res) => {
       });
     }
   } catch (err) {
-    console.log(err);
-    res.status(500).send("Error");
+    next(err);
   }
 });
 
 // Reset Code
-router.post("/resetcode", async (req, res) => {
+router.post("/resetcode", async (req, res, next) => {
   try {
     const { resetcode } = req.body;
 
@@ -251,19 +249,19 @@ router.post("/resetcode", async (req, res) => {
 
     res.redirect("/newpassword");
   } catch (err) {
-    res.status(500).send("Error updating password");
+    next(err);
   }
 });
 
 // Reset Password
-router.get("/newpassword", (req, res) => {
+router.get("/newpassword", (req, res, next) => {
   if (!req.session.resetEmail) {
     return res.redirect("/reset");
   }
   res.render("newpassword", { message: null });
 });
 
-router.post("/newpassword", async (req, res) => {
+router.post("/newpassword", async (req, res, next) => {
   try {
     const { password, repeatPassword } = req.body;
 
@@ -286,18 +284,17 @@ router.post("/newpassword", async (req, res) => {
 
     res.redirect("/login");
   } catch (err) {
-    res.status(500).send("Server error");
+    next(err);
   }
 });
 
 // All users in json
-router.get("/users", async (req, res) => {
+router.get("/users", async (req, res, next) => {
   try {
     const users = await User.find();
     res.json(users);
   } catch (err) {
-    res.status(500).json({ error: "Error retrieving users" });
+    next(err);
   }
 });
-
 module.exports = router;
