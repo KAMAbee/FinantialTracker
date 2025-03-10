@@ -15,7 +15,7 @@
 
   <main class="main">
     <div class="main__container">
-      
+
       <div class="main__users-list">
         <h2>Users</h2>
 
@@ -30,10 +30,10 @@
           <h3><%= user.username %> (<%= user.role %>)</h3>
           <p><%= user.email %></p>
           <p>Created: <%= user.createdAt %></p>
-          <p>Transactions: 
+          <p>Transactions:
             <% let userTransactions = usersWithTransactionCount.find(u => u._id.toString() === user._id.toString()); %>
             <%= userTransactions ? userTransactions.transactionsCount : 0 %>
-          </p>          
+          </p>
 
           <form class="main__form-update" action="/admin/updateRole" method="POST">
             <input type="hidden" name="userId" value="<%= user._id %>">
@@ -48,15 +48,15 @@
 
         <div class="pagination">
           <% if (totalPages > 1) { %>
-            <% if (currentPage > 1) { %>
-              <a href="?page=<%= currentPage - 1 %>&limit=3" class="pagination__prev">⬅️</a>
-            <% } %>
-        
-            <span>Page <%= currentPage %> / <%= totalPages %></span>
-        
-            <% if (currentPage < totalPages) { %>
-              <a href="?page=<%= currentPage + 1 %>&limit=3" class="pagination__next">➡️</a>
-            <% } %>
+          <% if (currentPage > 1) { %>
+          <a href="?page=<%= currentPage - 1 %>&limit=3" class="pagination__prev">⬅️</a>
+          <% } %>
+
+          <span>Page <%= currentPage %> / <%= totalPages %></span>
+
+          <% if (currentPage < totalPages) { %>
+          <a href="?page=<%= currentPage + 1 %>&limit=3" class="pagination__next">➡️</a>
+          <% } %>
           <% } %>
         </div>
       </div>
